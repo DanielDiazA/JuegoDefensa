@@ -1,38 +1,55 @@
-package grafica;
+package Registro;
 
 import javax.swing.*;
 
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class VentanaMenu extends JFrame{
+public class VentanaMenu extends JFrame {
 	private JButton btnTienda;
 	private JButton btnJugar;
 	private JButton btnSalir;
 	private JLabel background;
-	
+	private JFrame menu;
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaMenu window = new VentanaMenu();
+					window.menu.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 	public VentanaMenu() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setResizable(false);
-		getContentPane().setLayout(null);
-		this.setSize(768, 453);
-		getContentPane().setBounds(new Rectangle(0, 0, 768, 453));
-		
+		menu = new JFrame();
+		menu.setVisible(true);
+		menu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		menu.setResizable(false);
+		menu.setLayout(null);
+		menu.setSize(768, 453);
+		menu.setBounds(new Rectangle(0, 0, 768, 453));
+
 		btnJugar = new JButton("Jugar");
 		btnJugar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentanaTienda tienda = new VentanaTienda();
-				tienda.setVisible(true);
-				//menu.setVisible(false);		
+				 menu.setVisible(false);
+				Main m= new Main();
+				
 			}
 		});
-		
+
 		btnJugar.setFont(new Font("Old English Text MT", Font.PLAIN, 60));
 		btnJugar.setBounds(181, 112, 400, 117);
-		getContentPane().add(btnJugar);
-		
+		menu.add(btnJugar);
+
 		btnTienda = new JButton("Tienda");
 		btnTienda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -40,34 +57,35 @@ public class VentanaMenu extends JFrame{
 		});
 		btnTienda.setFont(new Font("Old English Text MT", Font.PLAIN, 30));
 		btnTienda.setBounds(253, 261, 259, 60);
-		getContentPane().add(btnTienda);
-		
+		menu.add(btnTienda);
+
 		btnSalir = new JButton();
-		btnSalir.setIcon(new ImageIcon("C:\\Users\\pili\\workspace\\Nuevo Juego\\bin\\fotos\\Flecha.png"));
+		btnSalir.setIcon(new ImageIcon("/Recursos/ejercitoH.jpg"));
 		btnSalir.setOpaque(false);
 		btnSalir.setContentAreaFilled(false);
 		btnSalir.setBounds(new Rectangle(1160, 685, 100, 75));
 		btnSalir.setBorderPainted(false);
 		btnSalir.setBounds(677, 384, 85, 41);
-		getContentPane().add(btnSalir);
-		
+		menu.add(btnSalir);
+
 		background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\pili\\workspace\\Nuevo Juego\\bin\\fotos\\Luna.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\Luna.jpg"));
 		background.setBounds(0, 0, 762, 425);
-		getContentPane().add(background);
+		menu.add(background);
 
-	
-		
-	btnSalir.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			System.exit(0);
-		}
-	});
-  }
+		btnTienda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Usuario u = new Usuario();
+				VentanaTienda tienda = new VentanaTienda(u);
+				menu.setVisible(false);
+			}
 
-public static void main(String[] args) {
-	VentanaMenu menu = new VentanaMenu();
-	menu.setVisible(true);
+		});
+
+		btnSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+	}
 }
-}
-	

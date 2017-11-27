@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -11,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import java.awt.Font;
+import java.applet.AudioClip;
 import java.awt.Color;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
@@ -18,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Window.Type;
+import javax.swing.JPasswordField;
 
 public class VentanaRegistro extends JFrame {
 
@@ -30,29 +34,45 @@ public class VentanaRegistro extends JFrame {
 	public JTextField textField_1;
 	public JTextField textField_2;
 	public JTextField textField_3;
-	public JTextField textField_4;
-	public JTextField textField_5;
+	private JPasswordField passwordField;
+	private JPasswordField passwordField_1;
+
 
 	/**
 	 * Launch the application.
 	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Usuario u =new Usuario();
+					VentanaRegistro window = new VentanaRegistro(u);
+					window.frmRegistroUsuario.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	/**
 	 * Create the application.
 	 */
-	public VentanaRegistro() {
-
+	public VentanaRegistro(	Usuario u) {
+		
 		frmRegistroUsuario = new JFrame();
 		frmRegistroUsuario.setType(Type.POPUP);
 		frmRegistroUsuario.setTitle("Registro Usuario");
 		frmRegistroUsuario.setForeground(Color.ORANGE);
 		frmRegistroUsuario.setBounds(500, 200, 800, 500);
+		frmRegistroUsuario.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dani\\Desktop\\icono.png"));
 		frmRegistroUsuario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRegistroUsuario.getContentPane().setLayout(new GridLayout(7, 0, 0, 0));
 		frmRegistroUsuario.setResizable(false);// Para no maximizar la
 												// pantalla,siempre el mismo
 												// tamaño
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.PINK);
 		frmRegistroUsuario.setVisible(true);
 		frmRegistroUsuario.getContentPane().add(panel);
 		panel.setLayout(null);
@@ -62,9 +82,27 @@ public class VentanaRegistro extends JFrame {
 		lblNombre.setBounds(45, 13, 173, 40);
 		panel.add(lblNombre);
 		textField_1 = new JTextField();
-		
+		textField_1.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				
+				String nombre = textField_1.getText();
+				nombre = nombre.toUpperCase();
+				for (int i = 0; i < nombre.length(); i++) {
+					if (nombre.charAt(i) < 'A' || nombre.charAt(i) > 'Z') {
+						JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
+						textField_1.setText(textField_1.getText().substring(0, textField_1.getText().length() - 1));
+
+					}
+				}
+
+			}
+		});
+		textField_1.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
+
 		textField = new JTextField();
-		
+		textField.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
+
 		textField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -74,9 +112,7 @@ public class VentanaRegistro extends JFrame {
 					if (nombre.charAt(i) < 'A' || nombre.charAt(i) > 'Z') {
 						JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
 						textField.setText(textField.getText().substring(0, textField.getText().length() - 1));
-
-					} else {
-
+						//u.setNombre(nombre);
 					}
 				}
 
@@ -94,9 +130,9 @@ public class VentanaRegistro extends JFrame {
 		lblApellidos.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 		lblApellidos.setBounds(45, 13, 107, 40);
 		panel_1.add(lblApellidos);
-		
+
 		textField_1.setEditable(true);
-	
+
 		textField_1.setColumns(10);
 		textField_1.setBounds(280, 13, 452, 35);
 		panel_1.add(textField_1);
@@ -111,6 +147,27 @@ public class VentanaRegistro extends JFrame {
 		panel_2.add(lblNewLabel);
 
 		textField_2 = new JTextField();
+		textField_2.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+			int	k = Integer.parseInt(textField_2.getText()); 
+			
+
+				for (int i = 0; i < textField_2.getText().length(); i++) {
+					if (Character.isDigit(textField_2.getText().charAt(i)) == false) {
+						JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
+						textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
+					} else {
+					if (k>100||k<0) {
+						JOptionPane.showMessageDialog(frmRegistroUsuario, "La edad solo puede estar entre 0 y 100 años");
+							textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
+						}
+					}
+
+				}
+			}
+		});
+		textField_2.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 		textField_2.setColumns(10);
 		textField_2.setBounds(280, 13, 452, 35);
 		panel_2.add(textField_2);
@@ -125,10 +182,18 @@ public class VentanaRegistro extends JFrame {
 		panel_3.add(lblNewLabel_1);
 
 		textField_3 = new JTextField();
+		textField_3.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+				
+			}
+		});
+		textField_3.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 		textField_3.setColumns(10);
 		textField_3.setBounds(280, 14, 452, 35);
 		panel_3.add(textField_3);
-
+		
 		JPanel panel_4 = new JPanel();
 		frmRegistroUsuario.getContentPane().add(panel_4);
 		panel_4.setLayout(null);
@@ -138,10 +203,9 @@ public class VentanaRegistro extends JFrame {
 		lblContrasea.setBounds(45, 21, 176, 16);
 		panel_4.add(lblContrasea);
 
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(280, 14, 452, 35);
-		panel_4.add(textField_4);
+		passwordField_1 = new JPasswordField();
+		passwordField_1.setBounds(283, 13, 451, 35);
+		panel_4.add(passwordField_1);
 
 		JPanel panel_5 = new JPanel();
 		frmRegistroUsuario.getContentPane().add(panel_5);
@@ -152,10 +216,9 @@ public class VentanaRegistro extends JFrame {
 		lblRepetirContrasea.setBounds(45, 23, 237, 25);
 		panel_5.add(lblRepetirContrasea);
 
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(280, 13, 452, 35);
-		panel_5.add(textField_5);
+		passwordField = new JPasswordField();
+		passwordField.setBounds(283, 13, 451, 35);
+		panel_5.add(passwordField);
 
 		JPanel panel_6 = new JPanel();
 		frmRegistroUsuario.getContentPane().add(panel_6);
@@ -164,18 +227,34 @@ public class VentanaRegistro extends JFrame {
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				if(textField.getText().isEmpty()||textField_1.getText().isEmpty()||textField_2.getText().isEmpty()||textField_3.getText().isEmpty()
-						||textField_4.getText().isEmpty()||textField_5.getText().isEmpty()){
-					JOptionPane.showMessageDialog(frmRegistroUsuario, "Tienes que rellenar todos los espacios");			
-					
+				char[] arrayC = passwordField.getPassword();
+		
+		
+				String pass = new String(arrayC);
+
+				char[] arrayD = passwordField_1.getPassword();
+
+				String pass2 = new String(arrayD);
+				if (textField.getText().isEmpty() || textField_1.getText().isEmpty() || textField_2.getText().isEmpty()
+						|| textField_3.getText().isEmpty() || passwordField_1.getText().isEmpty()
+						|| passwordField.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(frmRegistroUsuario, "Tienes que rellenar todos los espacios");
+
+				} else {
+					if (pass.equals(pass2)) {
+						//Guardar datos del Usuario
+//						u.setNombre(textField.getText());
+//						u.setEdad(Integer.parseInt(textField_2.getText()));
+//						u.setDinero(0);
+//						u.setApellido(textField_1.getText());
+//						u.setNick(textField_3.getText());
+//						u.setContraseña(pass);
+						new VentanaPrincipal();
+						frmRegistroUsuario.setVisible(false);;
+					} else {
+						JOptionPane.showMessageDialog(frmRegistroUsuario, "Verifica que las contraseñas son iguales");
+					}
 				}
-				
-				
-				
-				
-				
-				
 			}
 		});
 		btnRegistrarse.setBackground(new Color(154, 205, 50));
@@ -187,6 +266,7 @@ public class VentanaRegistro extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+			
 				new VentanaPrincipal();
 				frmRegistroUsuario.dispose();
 
@@ -197,19 +277,14 @@ public class VentanaRegistro extends JFrame {
 		btnCancelar.setFont(new Font("Snap ITC", Font.PLAIN, 26));
 		btnCancelar.setBounds(514, 13, 209, 40);
 		panel_6.add(btnCancelar);
+		
+		panel.setBackground(Color.PINK);
+		panel_1.setBackground(Color.PINK);
+		panel_2.setBackground(Color.PINK);
+		panel_3.setBackground(Color.PINK);
+		panel_4.setBackground(Color.PINK);
+		panel_5.setBackground(Color.PINK);
+		panel_6.setBackground(Color.PINK);
+	
 	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaRegistro window = new VentanaRegistro();
-					window.frmRegistroUsuario.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 }
