@@ -1,9 +1,6 @@
 package Registro;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -14,8 +11,9 @@ import javax.swing.*;
 
 public class VentanaJuego extends JFrame{
 	private JFrame juego;
+	private ArrayList<Arma> armaArray = new ArrayList<>();
 	private Protagonista p;
-	private ArrayList<Enemigo> e = new ArrayList<Enemigo>();
+	private ArrayList<Enemigo> enemigoArray = new ArrayList<Enemigo>();
 	private JFrame fin;
 	
 	
@@ -30,55 +28,71 @@ public class VentanaJuego extends JFrame{
 					e.printStackTrace();
 				}
 			}
-			
 		});
 	}
 	
 	
 	public VentanaJuego(){
 		Initialize();
+		
 	}
 	
 	public void Initialize(){
 		juego = new JFrame();
+		juego.setBounds(0, 0, 1000, 600);
 		p = new Protagonista(juego.getWidth()/2, juego.getHeight(), 1);
 		juego.setVisible(true);
 		juego.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		juego.setBounds(500, 200, 770, 450);
-		juego.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dani\\Desktop\\icono.png"));
 		juego.setResizable(false);
-		int contador = 0;
-		if(contador != 100){
-			EventQueue.invokeLater( new Runnable(){
-				public void run() {
+		JLabel vidas = new JLabel();
+		vidas.setText("Nº de Vidas: "+ p.getPV());
+		vidas.setBounds(1000-100, 600-75, 100, 75);
+		juego.add(vidas);
+		
+		
+		EventQueue.invokeLater( new Runnable(){
+			public void run() {
+				int contador = 0;
+				if(contador <= 99){
 					try {
-						crearEnemigos(e);
-						Thread.sleep(3000);
+						crearEnemigos(enemigoArray);
+						Thread.sleep(2000);
+						int contadorEnemigos = 0;
+						if(enemigoArray.get(contadorEnemigos).getPosY() != 100){
+							moverEnemigos(enemigoArray);
+							contadorEnemigos++;
+						}
+						
 					} catch (InterruptedException e1) {
 						e1.printStackTrace();
 					}
-				}
-			});
-		} else {
-			fin = new JFrame();
-			fin.setResizable(false);
-			fin.setTitle("¡Enhorabuena!");
-			JTextField texto = new JTextField();
-			JButton boton = new JButton("Volver al Menú");
-			texto.setText("Has superado el juego.");
-			fin.add(texto);
-			fin.add(boton);
-			fin.setVisible(true);
-			boton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					VentanaMenu menu = new VentanaMenu();
-					fin.setVisible(false);
-					juego.setVisible(false);
-				}
-			});
+				contador++;				
 		
-		}
-		
+				} else {
+					fin = new JFrame();
+					fin.setResizable(false);
+					fin.setTitle("¡Enhorabuena!");
+					JTextField texto = new JTextField();
+					JButton boton = new JButton("Volver al Menú");
+					texto.setText("Has superado el juego.");
+					fin.add(texto);
+					fin.add(boton);
+					fin.setVisible(true);
+					boton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							VentanaMenu menu = new VentanaMenu();
+							fin.setVisible(false);
+							juego.setVisible(false);
+						}
+					});
+				}
+				while(true){
+					repaint();
+				}
+					
+			}
+		});
+			
 		
 		
 		juego.addKeyListener(new KeyListener() {
@@ -97,7 +111,7 @@ public class VentanaJuego extends JFrame{
 			
 			public void keyPressed3(KeyEvent espacio) {
 				if (espacio.getKeyCode() == KeyEvent.VK_SPACE){
-					disparar(p.getPosX(), p.getPosY());
+					disparar(p.getPosX(), p.getPosY(), armaArray);
 				}
 			}
 
@@ -117,13 +131,18 @@ public class VentanaJuego extends JFrame{
 	
 	public void crearEnemigos(ArrayList<Enemigo> e){
 				try{
-					if(e.size() != 10){
+					if(e.size() < 5){
 						int random = randomizadorEnemigos();
 						if (random == 1){
-							e.add(new Esqueleto( (int) (Math.random() * 770)+ 1, (int) (Math.random() * 450)+ 1) );
+							Esqueleto s = new Esqueleto( (int) (Math.random() * 1000)+ 1, 0);
+							s.paint(null);
+							e.add(s);
+							
 						}
 						if (random == 2){
-							e.add(new Zombie( (int) (Math.random() * 770)+ 1, (int) (Math.random() * 450)+ 1) );
+							Zombie z = new Zombie( (int) (Math.random() * 1000)+ 1, 0);
+							z.paint(null);
+							e.add(z);
 						}
 					}
 				}
@@ -132,45 +151,66 @@ public class VentanaJuego extends JFrame{
 			}
 	
 	public int moverDerecha(int PosX){
-		int PosX2 = PosX + 1;
-		return PosX2;
+		PosX += 1;
+		return PosX;
 	}
 	
 	public int moverIzquierda(int PosX){
-		int PosX2 = PosX - 1;
-		return PosX2;
+		PosX -= 1;
+		return PosX;
 	}
 	
-	public int moverArriba(int PosY){
-		int PosY2 = PosY - 1;
-		return PosY2;
-	}
 	
-	public int moverAbajo(int PosY){
-		int PosY2 = PosY + 1;
-		return PosY2;
-	}
-	
-	public boolean consultarPos(ArrayList<Enemigo> e, Arma a, int contador){
-		boolean coincidir = false;	
-		if(contador <= e.size()){
-			coincidir = e.get(contador).getPosX() == a.getPosX() && e.get(contador).getPosY() == a.getPosY();
-		}
-		return coincidir;
-			
-	}
-	
-	public void disparar(int PosX, int PosY){
-		Arma a = new Arma(PosX, PosY);
-		while (a.getPosY() != 0){
-			moverArriba(a.getPosY());
-			int contador = 0;
-			if (consultarPos(e, a, contador) == true){
-				e.get(contador).setPV(e.get(contador).getPV() - p.getDanyo());
-			}
+	public void moverEnemigos(ArrayList<Enemigo> e){
+		int contador = 0;
+		if (contador <= e.size()){
+			e.get(contador).moverAbajo(e.get(contador).getPosY());
 			contador++;
 		}
 	}
 	
+	public boolean consultarPos(ArrayList<Enemigo> e, ArrayList<Arma> arma, int contadorArrayE, int contadorArrayA){
+		boolean coincidir = false;	
+		coincidir = e.get(contadorArrayE).getPosX() + 10 > arma.get(contadorArrayA).getPosX() && e.get(contadorArrayE).getPosX() - 10 < arma.get(contadorArrayA).getPosX() && e.get(contadorArrayE).getPosY() == arma.get(contadorArrayA).getPosY();
+		
+		return coincidir;
+			
+	}
+	
+	public void desaparecerArma(ArrayList<Arma> armaArray, int contadorArrayA){
+		armaArray.set(contadorArrayA, null);
+	}
+	
+	public void desaparecerEnemigo(ArrayList<Enemigo> enemigoArray, int contadorArrayE){
+		enemigoArray.set(contadorArrayE, null);
+	}
+	
+	public void disparar(int PosX, int PosY, ArrayList<Arma> armaArray){
+		Arma a = new Arma(PosX, PosY);
+		armaArray.add(a);
+		while (a.getPosY() != 0){
+			a.moverArriba(a.getPosY());
+			colision();
+			
+		}
+	}
+	
+	public void colision(){
+		int contadorArrayE = 0;
+		int contadorArrayA = 0;
+		while(contadorArrayE <= enemigoArray.size()){
+			while(contadorArrayA <= armaArray.size()){
+				if (consultarPos(enemigoArray, armaArray, contadorArrayE, contadorArrayA) == true){
+					enemigoArray.get(contadorArrayE).setPV(enemigoArray.get(contadorArrayE).getPV() - p.getDanyo());
+					desaparecerArma(armaArray, contadorArrayA);
+					if(enemigoArray.get(contadorArrayE).getPV() <= 0){
+						desaparecerEnemigo(enemigoArray, contadorArrayE);
+					}
+				}
+			contadorArrayA++;
+			}
+		contadorArrayE++;	
+		}
+	}
 
 }

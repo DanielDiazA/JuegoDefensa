@@ -1,12 +1,15 @@
-package Registro;
+package Clases;
 
-import javax.swing.ImageIcon;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+
 
 public class Enemigo {
 	protected int PV;
 	protected int velocidad;
 	protected int danyo;
-	protected ImageIcon img;
+	protected String img;
 	protected int posX;
 	protected int posY;
 	
@@ -23,7 +26,7 @@ public class Enemigo {
 	public void setPosY(int posY) {
 		this.posY = posY;
 	}
-	public void setImg(ImageIcon img) {
+	public void setImg(String img) {
 		this.img = img;
 	}
 	public int getPV() {
@@ -43,6 +46,21 @@ public class Enemigo {
 	}
 	public void setDanyo(int danyo) {
 		this.danyo = danyo;
+	}
+	
+	public void moverAbajo(int posY){
+		posY += 1;
+		setPosY(posY);
+		//repaint();
+		moverAbajo(posY);
+	}
+	public void paint(Graphics g) {
+		paint(g);
+		Toolkit t = Toolkit.getDefaultToolkit ();
+		Image imagen = t.getImage(img);
+		g.drawImage(imagen, PV, PV, null);
+		
+		
 	}
 	
 }

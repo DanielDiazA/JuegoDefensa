@@ -33,4 +33,7 @@ public class Arma {
 		PosY = posY;
 	}
 
+	public void moverArriba(int posY){
+		setPosY(posY + 1);
+	}
 }

@@ -1,4 +1,4 @@
-package Registro;
+package Clases;
 
 public class Protagonista {
 	private int PV = 3;
