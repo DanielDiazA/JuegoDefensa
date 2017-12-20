@@ -28,16 +28,16 @@ public class BD {
 				
 				sql = "Create table INVENTARIO("
 						+ "NICK String,"
-						+ "P1 Boolean,"
-						+ "P2 Boolean,"
-						+ "P3 Boolean"
+						+ "P1 int,"
+						+ "P2 int,"
+						+ "P3 int"
 						+ ")";
 				stat.executeUpdate(sql);
 				
 				sql = "Create table TIENDA("
-						+ "P1 Boolean,"
-						+ "P2 Boolean,"
-						+ "P3 Boolean"
+						+ "P1 int,"
+						+ "P2 int,"
+						+ "P3 int"
 						+ ")";
 				stat.executeUpdate(sql);
 				
@@ -49,7 +49,7 @@ public class BD {
 				if(!rs.next()){
 					sql = "Insert into USUARIO values ('Administrador', 'Administrador','','','','99999')";
 					stat.executeUpdate(sql);
-					sql = "Insert into Inventario values ('Administrador', 'true', 'true', 'true')";
+					sql = "Insert into Inventario values ('Administrador', '1', '1', '1')";
 					stat.executeUpdate(sql);
 				}
 	
@@ -99,15 +99,15 @@ public class BD {
 		}
 	}
 	
-	public static String insertarInventario(String nick, Boolean p1, Boolean p2, Boolean p3){
+	public static String insertarInventario(String nick, int p1, int p2, int p3){
 		PreparedStatement stmt;
 		
 		try{
 			stmt = con.prepareStatement("INSERT INTO INVENTARIO VALUES (?, ?, ?, ?)");
 			stmt.setString(1, nick);
-			stmt.setBoolean(2, p1);
-			stmt.setBoolean(3, p2);
-			stmt.setBoolean(4, p3);
+			stmt.setInt(2, p1);
+			stmt.setInt(3, p2);
+			stmt.setInt(4, p3);
 			
 			stmt.executeUpdate();
 			
