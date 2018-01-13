@@ -1,4 +1,4 @@
-package Clases;
+package Registro;
 
 import java.awt.Graphics;
 import java.awt.Image;

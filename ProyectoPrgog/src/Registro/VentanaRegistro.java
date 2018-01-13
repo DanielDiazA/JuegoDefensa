@@ -242,9 +242,18 @@ public class VentanaRegistro extends JFrame {
 
 				} else {
 					if (pass.equals(pass2)) {
+						
+						
+						
+						
 						String str = textField_2.getText(); 
 						BD.insertarUsuario(textField_3.getText(), passwordField_1.getText(), textField_1.getText(), textField.getText(), Integer.parseInt(str), 0);
 						BD.insertarInventario(textField_3.getText(), 1, 0, 0);
+						
+						
+						
+						
+						
 						
 						//Guardar datos del Usuario
 //						u.setNombre(textField.getText());

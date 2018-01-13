@@ -1,4 +1,4 @@
-package Clases;
+package Registro;
 
 public class Protagonista {
 	private int PV = 3;
@@ -62,4 +62,3 @@ public class Protagonista {
 		this.danyo = danyo;
 	}
 }
-

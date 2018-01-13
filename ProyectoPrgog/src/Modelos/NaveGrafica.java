@@ -2,6 +2,7 @@ package Modelos;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Polygon;
 
 public class NaveGrafica extends Nave implements Dibujable{

@@ -2,18 +2,35 @@ package Registro;
 
 import javax.swing.*;
 
+import Modelos.Coordenada;
+import Modelos.NaveGrafica;
+import Modelos.PanelFG;
+import Modelos.RectanguloGrafico;
+import Modelos.TextoGrafico;
+import Modelos.Ventana;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class VentanaMenu extends JFrame{
 	private JButton btnTienda;
 	private JButton btnJugar;
 	private JButton btnSalir;
 	private JFrame menu;
+	
+	
+	static int vidas=3;
+	static int puntos;
+	public static int Aleatorio(int Max, int Min) {
+		return (int) (Math.random() * (Max - Min));
+	}
+	
 	
 	
 	public static void main(String[] args) {
@@ -29,26 +46,32 @@ public class VentanaMenu extends JFrame{
 		});
 	}
 	
+
+	
+	
 	
 	public VentanaMenu() {
 		Initialize();
 	}
+	ArrayList v;
 	public void Initialize(){
 		menu = new JFrame();
 		menu.setVisible(true);
 		menu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		menu.setResizable(false);
 		menu.getContentPane().setLayout(null);
-		menu.setBounds(new Rectangle(0, 0, 770, 450));
+		menu.setBounds(400, 200, 1000, 600);
+		
+		
 		
 		btnJugar = new JButton("Jugar");
 		btnJugar.setFont(new Font("Bauhaus 93", Font.PLAIN, 60));
-		btnJugar.setBounds(181, 112, 400, 117);
+		btnJugar.setBounds(277, 197, 400, 117);
 		menu.getContentPane().add(btnJugar);
 		
 		btnTienda = new JButton("Tienda");
 		btnTienda.setFont(new Font("Bauhaus 93", Font.PLAIN, 30));
-		btnTienda.setBounds(253, 261, 259, 60);
+		btnTienda.setBounds(277, 385, 400, 117);
 		menu.getContentPane().add(btnTienda);
 		
 		btnSalir = new JButton();
@@ -72,7 +95,9 @@ public class VentanaMenu extends JFrame{
 		
 		btnJugar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentanaJuego v = new VentanaJuego();
+				
+				
+				
 				menu.setVisible(false);				
 			}
 		});

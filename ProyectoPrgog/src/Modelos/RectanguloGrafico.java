@@ -2,6 +2,9 @@ package Modelos;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
 
 public class RectanguloGrafico extends Rectangulo implements Dibujable {
 
@@ -21,6 +24,7 @@ public class RectanguloGrafico extends Rectangulo implements Dibujable {
 	@Override
 	public void dibujar(Graphics dw) {
 		
+		
 		dw.setColor(color);
 		dw.fillRect((int)this.getX(),(int)this.getY(),(int)this.Getlado(1),(int)this.Getlado(2));
 	}
@@ -33,12 +37,12 @@ public class RectanguloGrafico extends Rectangulo implements Dibujable {
 	
 	
 	
-	public void Ciclo(){
+	public void Ciclo(int mov){
 		
 		float x=this.getY();
 		
 		//velocidad
-		this.setY(x+=8);
+		this.setY(x+=mov);
 		
 	}
 	

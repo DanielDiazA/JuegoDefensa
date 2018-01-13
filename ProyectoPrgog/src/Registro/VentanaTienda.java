@@ -1,10 +1,12 @@
-package Clases;
+package Registro;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaTienda extends JFrame {
 	private int monedas;
@@ -18,6 +20,15 @@ public class VentanaTienda extends JFrame {
 	private JLabel iconoMonedas;
 	private JButton btnSalir;
 	private JFrame tienda;
+	private JLabel lblOrogorn_1;
+	private JLabel lblGondolf;
+	private JLabel label;
+	private JPanel panel_4;
+	private JPanel panel_5;
+	private JLabel lblNewLabel;
+	private JPanel panel_6;
+	private JPanel panel_7;
+	private JLabel lblVolverMenu;
 	
 	
 	public static void main(String[] args) {
@@ -41,38 +52,40 @@ public class VentanaTienda extends JFrame {
 	
 	public void Initialize(){
 		tienda = new JFrame();
+		tienda.setLocation(400, 200);
+		tienda.setSize(1000, 600);
 		tienda.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		tienda.setSize(768, 453);
-		tienda.setLayout(null);
+		tienda.setResizable(false);
+		tienda.getContentPane().setLayout(null);
 		tienda.setVisible(true);
 		labelDinero = new JLabel("Monedas: " + getMonedas());
 		labelDinero.setForeground(Color.ORANGE);
-		labelDinero.setFont(new Font("Rockwell Extra Bold", Font.PLAIN, 14));
-		labelDinero.setBounds(631, 0, 121, 40);
-		tienda.add(labelDinero);
+		labelDinero.setFont(new Font("Rockwell Extra Bold", Font.PLAIN, 20));
+		labelDinero.setBounds(674, 0, 238, 78);
+		tienda.getContentPane().add(labelDinero);
 		
 		iconoMonedas = new JLabel("");
-		iconoMonedas.setIcon(new ImageIcon("C:\\Users\\Jonathan\\workspace\\ProyectoDefender\\src\\Recursos\\MonedaOro.png"));
-		iconoMonedas.setBounds(592, 0, 40, 40);
-		tienda.add(iconoMonedas);
+		iconoMonedas.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\MonedaOro.png"));
+		iconoMonedas.setBounds(924, 13, 46, 40);
+		tienda.getContentPane().add(iconoMonedas);
 		
 		btnCompraArco = new JButton("");
 	
 		
 		btnCompraArco.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
-		btnCompraArco.setIcon(new ImageIcon("C:\\Users\\Jonathan\\workspace\\ProyectoDefender\\src\\Recursos\\Arquero.png"));
+		btnCompraArco.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\arco.png"));
 		btnCompraArco.setContentAreaFilled(false);
 		btnCompraArco.setOpaque(false);
-		btnCompraArco.setBounds(43, 123, 200, 200);
-		tienda.add(btnCompraArco);
+		btnCompraArco.setBounds(43, 162, 200, 200);
+		tienda.getContentPane().add(btnCompraArco);
 		
 		btnCompraBaston = new JButton("");
 		btnCompraBaston.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
-		btnCompraBaston.setIcon(new ImageIcon("C:\\Users\\Jonathan\\workspace\\ProyectoDefender\\src\\Recursos\\Hechicero.png"));
+		btnCompraBaston.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\baston.png"));
 		btnCompraBaston.setContentAreaFilled(false);
 		btnCompraBaston.setOpaque(false);
-		btnCompraBaston.setBounds(511, 123, 200, 200);
-		tienda.add(btnCompraBaston);
+		btnCompraBaston.setBounds(697, 162, 200, 200);
+		tienda.getContentPane().add(btnCompraBaston);
 		
 
 		
@@ -88,18 +101,7 @@ public class VentanaTienda extends JFrame {
 			}
 		});
 		
-		btnMonedas = new JButton("\u00A1Monedas!");
-		btnMonedas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try{
-					monedas++;
-				}catch(Exception excepcion){
-				}
-			}
-		});
-		btnMonedas.setFont(new Font("Old English Text MT", Font.PLAIN, 35));
-		btnMonedas.setBounds(266, 192, 224, 90);
-		tienda.add(btnMonedas);
+		
 		
 		btnSalir = new JButton();
 		btnSalir.addActionListener(new ActionListener() {
@@ -109,42 +111,156 @@ public class VentanaTienda extends JFrame {
 				
 			}
 		});
-		btnSalir.setIcon(new ImageIcon("C:\\Users\\Jonathan\\workspace\\ProyectoDefender\\src\\Recursos\\Flecha.png"));
+		btnSalir.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\Flecha.png"));
 		btnSalir.setOpaque(false);
 		btnSalir.setContentAreaFilled(false);
 		btnSalir.setBounds(new Rectangle(1160, 685, 100, 75));
 		btnSalir.setBorderPainted(false);
-		btnSalir.setBounds(675, 382, 77, 33);
-		tienda.add(btnSalir);
+		btnSalir.setBounds(804, 443, 133, 78);
+		tienda.getContentPane().add(btnSalir);
 		
 		lblTienda = new JLabel("TIENDA");
+		lblTienda.setBackground(Color.BLACK);
 		lblTienda.setBorder(new LineBorder(new Color(204, 153, 51), 5, true));
 		lblTienda.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTienda.setForeground(new Color(0, 0, 0));
-		lblTienda.setFont(new Font("Old English Text MT", Font.PLAIN, 50));
-		lblTienda.setBounds(177, 13, 405, 73);
-		tienda.add(lblTienda);
+		lblTienda.setForeground(Color.ORANGE);
+		lblTienda.setFont(new Font("Myriad Pro Light", Font.PLAIN, 50));
+		lblTienda.setBounds(257, 13, 405, 73);
+		tienda.getContentPane().add(lblTienda);
 		
 		lblPrecioArco = new JLabel("Monedas: 1000");
 		lblPrecioArco.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
 		lblPrecioArco.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrecioArco.setForeground(Color.ORANGE);
 		lblPrecioArco.setFont(new Font("Old English Text MT", Font.PLAIN, 25));
-		lblPrecioArco.setBounds(43, 322, 200, 54);
-		tienda.add(lblPrecioArco);
+		lblPrecioArco.setBounds(43, 361, 200, 54);
+		tienda.getContentPane().add(lblPrecioArco);
 		
 		lblPrecioBaston = new JLabel("Monedas: 5000");
 		lblPrecioBaston.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
 		lblPrecioBaston.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrecioBaston.setForeground(Color.ORANGE);
 		lblPrecioBaston.setFont(new Font("Old English Text MT", Font.PLAIN, 25));
-		lblPrecioBaston.setBounds(511, 322, 200, 54);
-		tienda.add(lblPrecioBaston);
+		lblPrecioBaston.setBounds(697, 361, 200, 54);
+		tienda.getContentPane().add(lblPrecioBaston);
+		
+		JLabel lblGratis = new JLabel("GRATIS");
+		lblGratis.setBackground(Color.BLUE);
+		lblGratis.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGratis.setForeground(Color.ORANGE);
+		lblGratis.setFont(new Font("Myriad Pro Light", Font.PLAIN, 25));
+		lblGratis.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
+		lblGratis.setBounds(367, 361, 200, 54);
+		tienda.getContentPane().add(lblGratis);
+		
+		JLabel lblOrogorn = new JLabel("LEGOLOS");
+		lblOrogorn.setHorizontalAlignment(SwingConstants.CENTER);
+		lblOrogorn.setForeground(Color.ORANGE);
+		lblOrogorn.setFont(new Font("Myriad Pro Light", Font.PLAIN, 25));
+		lblOrogorn.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
+		lblOrogorn.setBounds(43, 112, 200, 54);
+		tienda.getContentPane().add(lblOrogorn);
+		
+		JButton button = new JButton("");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+			}
+		});
+		button.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\dagas.png"));
+		button.setOpaque(false);
+		button.setContentAreaFilled(false);
+		button.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
+		button.setBounds(367, 162, 200, 200);
+		tienda.getContentPane().add(button);
+		
+		lblOrogorn_1 = new JLabel("OROGORN");
+		lblOrogorn_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblOrogorn_1.setForeground(Color.ORANGE);
+		lblOrogorn_1.setFont(new Font("Myriad Pro Light", Font.PLAIN, 25));
+		lblOrogorn_1.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
+		lblOrogorn_1.setBounds(367, 112, 200, 54);
+		tienda.getContentPane().add(lblOrogorn_1);
+		
+		lblGondolf = new JLabel("GONDOLF");
+		lblGondolf.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGondolf.setForeground(Color.ORANGE);
+		lblGondolf.setFont(new Font("Myriad Pro Light", Font.PLAIN, 25));
+		lblGondolf.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
+		lblGondolf.setBounds(697, 112, 200, 54);
+		tienda.getContentPane().add(lblGondolf);
+		
+		label = new JLabel("+MONEDAS");
+		label.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				
+				monedas++;
+				
+			}
+		});
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setForeground(Color.BLACK);
+		label.setFont(new Font("Myriad Pro Light", Font.PLAIN, 25));
+		label.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
+		label.setBounds(43, 457, 200, 54);
+		tienda.getContentPane().add(label);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.BLACK);
+		panel.setBounds(42, 111, 200, 55);
+		tienda.getContentPane().add(panel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.BLACK);
+		panel_1.setBounds(367, 112, 200, 55);
+		tienda.getContentPane().add(panel_1);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(Color.BLACK);
+		panel_2.setBounds(697, 112, 200, 55);
+		tienda.getContentPane().add(panel_2);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(new Color(0, 0, 0));
+		panel_3.setBounds(43, 361, 200, 55);
+		tienda.getContentPane().add(panel_3);
+		
+		panel_4 = new JPanel();
+		panel_4.setBackground(Color.BLACK);
+		panel_4.setBounds(367, 361, 200, 55);
+		tienda.getContentPane().add(panel_4);
+		
+		panel_5 = new JPanel();
+		panel_5.setBackground(Color.BLACK);
+		panel_5.setBounds(697, 361, 200, 55);
+		tienda.getContentPane().add(panel_5);
+		
+		panel_6 = new JPanel();
+		panel_6.setForeground(new Color(255, 192, 203));
+		panel_6.setBackground(Color.ORANGE);
+		panel_6.setBounds(43, 457, 200, 55);
+		tienda.getContentPane().add(panel_6);
+		
+		panel_7 = new JPanel();
+		panel_7.setBackground(new Color(184, 134, 11));
+		panel_7.setForeground(Color.BLACK);
+		panel_7.setBounds(257, 13, 405, 73);
+		tienda.getContentPane().add(panel_7);
+		
+		lblVolverMenu = new JLabel("Volver Menu");
+		lblVolverMenu.setFont(new Font("Myriad Pro Light", Font.PLAIN, 21));
+		lblVolverMenu.setForeground(Color.RED);
+		lblVolverMenu.setBounds(833, 507, 149, 33);
+		tienda.getContentPane().add(lblVolverMenu);
+		
+	
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Jonathan\\workspace\\ProyectoDefender\\src\\Recursos\\Luna.jpg"));
-		background.setBounds(0, 0, 752, 415);
-		tienda.add(background);
+		background.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\tienday.jpg"));
+		background.setBounds(0, 0, 982, 553);
+		tienda.getContentPane().add(background);
 	}
 	
 	private int getMonedas() {
@@ -156,5 +272,4 @@ public class VentanaTienda extends JFrame {
 			return 0;
 		}
 	}
-
 }
