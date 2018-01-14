@@ -83,7 +83,7 @@ public class VentanaRegistro extends JFrame {
 		panel.add(lblNombre);
 		textField_1 = new JTextField();
 		textField_1.addKeyListener(new KeyAdapter() {
-			@Override
+			
 			public void keyReleased(KeyEvent arg0) {
 				
 				String nombre = textField_1.getText();
@@ -104,7 +104,7 @@ public class VentanaRegistro extends JFrame {
 		textField.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 
 		textField.addKeyListener(new KeyAdapter() {
-			@Override
+			
 			public void keyReleased(KeyEvent arg0) {
 				String nombre = textField.getText();
 				nombre = nombre.toUpperCase();
@@ -148,7 +148,7 @@ public class VentanaRegistro extends JFrame {
 
 		textField_2 = new JTextField();
 		textField_2.addKeyListener(new KeyAdapter() {
-			@Override
+			
 			public void keyReleased(KeyEvent e) {
 			int	k = Integer.parseInt(textField_2.getText()); 
 			
@@ -183,7 +183,6 @@ public class VentanaRegistro extends JFrame {
 
 		textField_3 = new JTextField();
 		textField_3.addKeyListener(new KeyAdapter() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				
 				
@@ -227,32 +226,20 @@ public class VentanaRegistro extends JFrame {
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				char[] arrayC = passwordField.getPassword();
-		
-		
-				String pass = new String(arrayC);
+				String pass = passwordField.getPassword().toString();
+				String pass2 = passwordField_1.getPassword().toString();
 
-				char[] arrayD = passwordField_1.getPassword();
-
-				String pass2 = new String(arrayD);
 				if (textField.getText().isEmpty() || textField_1.getText().isEmpty() || textField_2.getText().isEmpty()
-						|| textField_3.getText().isEmpty() || passwordField_1.getText().isEmpty()
-						|| passwordField.getText().isEmpty()) {
+						|| textField_3.getText().isEmpty() || passwordField_1.getPassword().toString().isEmpty()
+						|| passwordField.getPassword().toString().isEmpty()) {
 					JOptionPane.showMessageDialog(frmRegistroUsuario, "Tienes que rellenar todos los espacios");
 
 				} else {
 					if (pass.equals(pass2)) {
-						
-						
-						
-						
 						String str = textField_2.getText(); 
-						BD.insertarUsuario(textField_3.getText(), passwordField_1.getText(), textField_1.getText(), textField.getText(), Integer.parseInt(str), 0);
+						BD.insertarUsuario(textField_3.getText(), passwordField_1.getPassword().toString(), textField_1.getText(), textField.getText(), Integer.parseInt(str), 0);
 						BD.insertarInventario(textField_3.getText(), 1, 0, 0);
-						
-						
-						
-						
+						BD.insertarRanking(textField_3.getText(), 0);
 						
 						
 						//Guardar datos del Usuario

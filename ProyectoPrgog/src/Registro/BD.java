@@ -34,13 +34,12 @@ public class BD {
 						+ ")";
 				stat.executeUpdate(sql);
 				
-				sql = "Create table TIENDA("
-						+ "P1 int,"
-						+ "P2 int,"
-						+ "P3 int"
+			sql = "Create table RANKING("
+						+ "NICK String,"
+						+ "PUNTUACION int"
 						+ ")";
-				stat.executeUpdate(sql);
-				
+			stat.executeUpdate(sql);
+			
 				
 			}catch(SQLException e){}
 			
@@ -95,9 +94,39 @@ public class BD {
 			return "Usuario añadido";
 			
 		}catch(Exception e){
-			return "Error en Usuario.";
+			return "Error en la creación de Usuario.";
 		}
 	}
+	
+	
+	public static String modificarUsuario(String nick, int monedas){
+		PreparedStatement stmt;
+		try{
+			stmt = con.prepareStatement("UPDATE USUARIO SET MONEDAS = ?" + "WHERE NICK = ?");
+			stmt.setInt(1, monedas);
+			stmt.setString(2, nick);
+			stmt.executeUpdate();
+			return "Usuario actualizado";
+			
+		}catch(Exception e){
+			return "Error de actualización de Usuario";
+		}
+	}
+	
+	public static int selectUsuario(String nick){
+		PreparedStatement stmt;
+		try{
+			stmt = con.prepareStatement("SELECT MONEDAS FROM USUARIO" + "WHERE NICK = ?");
+			stmt.setString(1, nick);
+			rs = stmt.executeQuery();
+			int monedas = Integer.parseInt((String) rs.getObject(2));
+			return monedas;
+			
+		}catch(Exception e){
+			return 0;
+		}
+	}
+	
 	
 	public static String insertarInventario(String nick, int p1, int p2, int p3){
 		PreparedStatement stmt;
@@ -108,13 +137,141 @@ public class BD {
 			stmt.setInt(2, p1);
 			stmt.setInt(3, p2);
 			stmt.setInt(4, p3);
-			
 			stmt.executeUpdate();
 			
 			return "Inventario añadido.";
 			
 		}catch(Exception e){
 			return "Error en Inventario";
+		}
+	}
+	
+	
+	public static String modificarInventario(String nick, int p1, int p2, int p3){
+		PreparedStatement stmt;
+		
+		try{
+			stmt = con.prepareStatement("UPDATE INVENTARIO SET P1 = ?, SET P2 = ?, SET P3 = ?" + "WHERE NICK = ?");
+			stmt.setInt(1, p1);
+			stmt.setInt(2, p2);
+			stmt.setInt(3, p3);
+			stmt.setString(4, nick);
+			stmt.executeUpdate();
+			
+			return "Compra validada";
+		}catch(Exception e){
+			return "Compra no validada";
+		}
+	}
+	
+	
+	public static int selectInventarioP1(String nick){
+		PreparedStatement stmt;
+		try{
+			stmt = con.prepareStatement("SELECT P1 FROM INVENTARIO" + "WHERE NICK = ?");
+			stmt.setString(1, nick);
+			rs = stmt.executeQuery();
+			int p1 = Integer.parseInt((String) rs.getObject(2));
+			return p1;
+			
+		}catch(Exception e){
+			return 0;
+		}
+	}
+	
+	public static int selectInventarioP2(String nick){
+		PreparedStatement stmt;
+		try{
+			stmt = con.prepareStatement("SELECT P2 FROM INVENTARIO" + "WHERE NICK = ?");
+			stmt.setString(1, nick);
+			rs = stmt.executeQuery();
+			int p2 = Integer.parseInt((String) rs.getObject(3));
+			return p2;
+			
+		}catch(Exception e){
+			return 0;
+		}
+	}
+	
+	public static int selectInventarioP3(String nick){
+		PreparedStatement stmt;
+		try{
+			stmt = con.prepareStatement("SELECT P3 FROM INVENTARIO" + "WHERE NICK = ?");
+			stmt.setString(1, nick);
+			rs = stmt.executeQuery();
+			int p3 = Integer.parseInt((String) rs.getObject(4));
+			return p3;
+			
+		}catch(Exception e){
+			return 0;
+		}
+	}
+	
+	
+	public static String insertarRanking(String nick, int puntuacion){
+		PreparedStatement stmt;
+		try{
+			stmt = con.prepareStatement("INSERT INTO RANKING VALUES (?, ?)");
+			stmt.setString(1, nick);
+			stmt.setInt(2, puntuacion);
+			stmt.executeUpdate();
+			
+			return "Puntuación añadida";
+			
+		}catch(Exception e){
+			return "Puntuación no añadida";
+		}
+	}
+	
+	public static String modificarRanking(String nick, int puntuacion){
+		PreparedStatement stmt;
+		try{
+			stmt = con.prepareStatement("UPDATE RANKING SET PUNTUACION = ?" + "WHERE NICK = ?");
+			stmt.setInt(1, puntuacion);
+			stmt.setString(2, nick);
+			stmt.executeUpdate();
+			
+			return "Puntuación modificada";
+			
+		}catch(Exception e){
+			return "Puntuación no modificado";
+		}
+	} 
+	
+	public static String[] selectRankingNick(){
+		PreparedStatement stmt;
+		String[] arrayNick = new String[10];
+		try {
+			stmt = con.prepareStatement("SELECT TOP 10 FROM RANKING" + "ORDER BY PUNTUACION DESC");
+			rs = stmt.executeQuery();
+			Array a = rs.getArray("NICK");
+			arrayNick = (String[]) a.getArray();
+			
+			return arrayNick;
+			
+			
+		} catch (Exception e) {
+			arrayNick = null;
+			return arrayNick;
+		}
+	
+	}
+	
+	public static String[] selectRankingPuntuacion(){
+		PreparedStatement stmt;
+		String[] arrayPuntuacion = new String[10];
+		try{
+			stmt = con.prepareStatement("SELECT TOP 10 PUNTUACION FROM RANKING" + "ORDER BY PUNTUACION DESC");
+			rs = stmt.executeQuery();
+			Array a = rs.getArray("PUNTUACION");
+			arrayPuntuacion = (String[]) a.getArray();
+			
+			return arrayPuntuacion;
+			
+			
+		}catch(Exception e){
+			arrayPuntuacion = null;
+			return arrayPuntuacion;
 		}
 	}
 	
