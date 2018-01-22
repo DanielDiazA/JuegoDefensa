@@ -110,7 +110,7 @@ public class VentanaMenu extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				musicafondo.stop();
 				pasarventana.play();
-				VentanaRanking ranking = new VentanaRanking();
+				VentanaRanking ranking = new VentanaRanking(user, invent);
 				menu.setVisible(false);
 			}
 		});
@@ -145,7 +145,7 @@ public class VentanaMenu extends JFrame {
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-				VentanaPrincipal vp = new VentanaPrincipal(new Usuario());
+				VentanaPrincipal vp = new VentanaPrincipal(new Usuario(), new Inventario());
 				menu.setVisible(false);
 				musicafondo.stop();
 				atras.play();

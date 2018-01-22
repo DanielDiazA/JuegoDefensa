@@ -19,7 +19,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 public class VentanaCharacter extends JFrame{
-	private int monedas = BD.selectMonedas(user);
 	private JLabel labelDinero;
 	private JButton btnArco;
 	private JButton btnBaston;
@@ -41,6 +40,7 @@ public class VentanaCharacter extends JFrame{
 	private JLabel lblOrogorn;
 	private static Usuario user;
 	private static Inventario invent;
+	private int monedas = BD.selectMonedas(user);
 	
 	
 	public static void main(String[] args) {

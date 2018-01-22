@@ -1,6 +1,7 @@
 package Registro;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 
 public class BD {
@@ -102,13 +103,13 @@ public class BD {
 			stmt = con.prepareStatement("SELECT * FROM USUARIO" + "WHERE NICK = ?");
 			stmt.setString(1, nick);
 			rs = stmt.executeQuery();
-			String nik = rs.getObject(1).toString();
-			String pass = rs.getObject(2).toString();
-			String nom = rs.getObject(3).toString();
-			String apell = rs.getObject(4).toString();
-			int edad = Integer.parseInt(rs.getObject(5).toString());
-			int monedas = Integer.parseInt(rs.getObject(6).toString());
-			int eleccion = Integer.parseInt(rs.getObject(7).toString());
+			String nik = rs.getString(1);
+			String pass = rs.getString(2);
+			String nom = rs.getString(3);
+			String apell = rs.getString(4);
+			int edad = rs.getInt(5);
+			int monedas = rs.getInt(6);
+			int eleccion = rs.getInt(7);
 			
 			user = new Usuario(nom, apell, edad, pass, monedas, nik, eleccion);
 			
@@ -126,7 +127,7 @@ public class BD {
 			stmt = con.prepareStatement("SELECT PASSWORD FROM USUARIO" + "WHERE NICK = ?");
 			stmt.setString(1, nick);
 			rs = stmt.executeQuery();
-			pass = rs.getObject(1).toString();
+			pass = rs.getString(1);
 			
 			return pass;
 			
@@ -177,13 +178,30 @@ public class BD {
 			stmt = con.prepareStatement("SELECT ELECCION FROM USUARIO" + "WHERE NICK = ?");
 			stmt.setString(1, nick);
 			rs = stmt.executeQuery();
-			int eleccion = Integer.parseInt((String) rs.getObject(1));
+			int eleccion = rs.getInt(1);
 			return eleccion;
 			
 		}catch(Exception e){
 			return 1;
 		}
 	}
+	
+	
+	public static ArrayList<String> getNicks(){
+		PreparedStatement stmt;
+		ArrayList<String> users;
+		
+		try {
+			stmt = con.prepareStatement("SELECT NICK FROM USUARIO");
+			rs = stmt.executeQuery();
+			
+			users = (ArrayList<String>) rs.getArray("NICK");
+			return users;
+			
+		}catch(Exception e) {
+			return null;
+		}
+	} 
 	
 	public static String modificarEleccion(Usuario u){
 		PreparedStatement stmt;
@@ -254,10 +272,10 @@ public class BD {
 		try{
 			stmt = con.prepareStatement("SELECT * FROM INVENTARIO" + "WHERE NICK = ?");
 			rs = stmt.executeQuery();
-			String nik = rs.getObject(1).toString();
-			int p1 = Integer.parseInt(rs.getObject(2).toString());
-			int p2 = Integer.parseInt(rs.getObject(3).toString());
-			int p3 = Integer.parseInt(rs.getObject(4).toString());
+			String nik = rs.getString(1);
+			int p1 = rs.getInt(2);
+			int p2 = rs.getInt(3);
+			int p3 = rs.getInt(4);
 			
 			i = new Inventario(nik, p1, p2, p3);
 			
@@ -277,7 +295,7 @@ public class BD {
 			stmt = con.prepareStatement("SELECT P1 FROM INVENTARIO" + "WHERE NICK = ?");
 			stmt.setString(1, nick);
 			rs = stmt.executeQuery();
-			int p1 = Integer.parseInt((String) rs.getObject(2));
+			int p1 = rs.getInt(1);
 			return p1;
 			
 		}catch(Exception e){
@@ -293,7 +311,7 @@ public class BD {
 			stmt = con.prepareStatement("SELECT P2 FROM INVENTARIO" + "WHERE NICK = ?");
 			stmt.setString(1, nick);
 			rs = stmt.executeQuery();
-			int p2 = Integer.parseInt((String) rs.getObject(3));
+			int p2 = rs.getInt(1);
 			return p2;
 			
 		}catch(Exception e){
@@ -309,7 +327,7 @@ public class BD {
 			stmt = con.prepareStatement("SELECT P3 FROM INVENTARIO" + "WHERE NICK = ?");
 			stmt.setString(1, nick);
 			rs = stmt.executeQuery();
-			int p3 = Integer.parseInt((String) rs.getObject(4));
+			int p3 = rs.getInt(1);
 			return p3;
 			
 		}catch(Exception e){

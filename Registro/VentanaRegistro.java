@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.awt.Window.Type;
 import javax.swing.JPasswordField;
 
@@ -150,23 +151,25 @@ public class VentanaRegistro extends JFrame {
 		textField_2.addKeyListener(new KeyAdapter() {
 			
 			public void keyReleased(KeyEvent e) {
-			int	k = Integer.parseInt(textField_2.getText()); 
-			
-
-				for (int i = 0; i < textField_2.getText().length(); i++) {
-					if (Character.isDigit(textField_2.getText().charAt(i)) == false) {
-						JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
-						textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
-					} else {
+				try {
+					int	k = Integer.parseInt(textField_2.getText());
 					if (k>100||k<0) {
 						JOptionPane.showMessageDialog(frmRegistroUsuario, "La edad solo puede estar entre 0 y 100 años");
 							textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
-						}
 					}
-
+					
+				}catch(Exception ex) {
+	
+					for (int i = 0; i < textField_2.getText().length(); i++) {
+						if (Character.isDigit(textField_2.getText().charAt(i)) == false) {
+							JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
+							textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
+						}
+					}	
 				}
 			}
 		});
+		
 		textField_2.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 		textField_2.setColumns(10);
 		textField_2.setBounds(280, 13, 452, 35);
@@ -188,6 +191,7 @@ public class VentanaRegistro extends JFrame {
 				
 			}
 		});
+		
 		textField_3.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 		textField_3.setColumns(10);
 		textField_3.setBounds(280, 14, 452, 35);
@@ -235,30 +239,30 @@ public class VentanaRegistro extends JFrame {
 					JOptionPane.showMessageDialog(frmRegistroUsuario, "Tienes que rellenar todos los espacios");
 
 				} else {
-					if (pass2.equals(pass)) {
-						String str = textField_2.getText();
-						Usuario user = new Usuario(textField.getText(),textField_1.getText(),Integer.parseInt(str),passwordField_1.getPassword().toString(),0,textField_3.getText(),1);
-						Inventario invent = new Inventario(user);
-						
-						BD.insertarUsuario(user);
-						BD.insertarInventario(invent);
-						
-						
-						//Guardar datos del Usuario
-//						u.setNombre(textField.getText());
-//						u.setEdad(Integer.parseInt(textField_2.getText()));
-//						u.setDinero(0);
-//						u.setApellido(textField_1.getText());
-//						u.setNick(textField_3.getText());
-//						u.setContraseña(pass);
-						new VentanaPrincipal(user, invent);
-						frmRegistroUsuario.setVisible(false);;
-					} else {
+					if (!pass2.equals(pass)) {
+						ArrayList<String> nicksBD = BD.getNicks();
+						for(String i : nicksBD) {
+							if(i.equals(textField.getText())) {
+								JOptionPane.showMessageDialog(frmRegistroUsuario, "Ya hay un usuario con ese nick");
+							}else{
+								String str = textField_2.getText().toString();
+								Usuario user = new Usuario(textField.getText(),textField_1.getText(),Integer.parseInt(str),passwordField_1.getPassword().toString(),0,textField_3.getText(),1);
+								Inventario invent = new Inventario(user);
+								
+								BD.insertarUsuario(user);
+								BD.insertarInventario(invent);
+								
+								new VentanaPrincipal(user, invent);
+								frmRegistroUsuario.setVisible(false);;
+							}
+						}
+					}else{
 						JOptionPane.showMessageDialog(frmRegistroUsuario, "Verifica que las contraseñas son iguales");
 					}
 				}
 			}
 		});
+		
 		btnRegistrarse.setBackground(new Color(154, 205, 50));
 		btnRegistrarse.setForeground(new Color(0, 0, 0));
 		btnRegistrarse.setFont(new Font("Snap ITC", Font.PLAIN, 26));

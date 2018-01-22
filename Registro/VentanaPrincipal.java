@@ -51,7 +51,7 @@ public class VentanaPrincipal extends JFrame {
 		AudioClip click;
 		click = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/click.wav"));
 		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dani\\Desktop\\icono.png"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Recursos/icono.png")));
 		frame.setBounds(500, 200, 800, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(2, 0, 0, 0));
@@ -65,7 +65,7 @@ public class VentanaPrincipal extends JFrame {
 		panel.setLayout(null);
 		
 		JLabel lblPantalla = new JLabel("pantalla");
-		lblPantalla.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\pantallap.png"));
+		lblPantalla.setIcon(new ImageIcon(getClass().getResource("/Recursos/pantallap.png")));
 		lblPantalla.setBounds(0, 0, 794, 232);
 		panel.add(lblPantalla);
 
@@ -126,7 +126,7 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		
-		lblLogin.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\login.png"));
+		lblLogin.setIcon(new ImageIcon(getClass().getResource("/Recursos/login.png")));
 		lblLogin.setBounds(149, 145, 256, 74);
 		panel_2.add(lblLogin);
 
@@ -140,11 +140,11 @@ public class VentanaPrincipal extends JFrame {
 
 			public void mouseClicked(MouseEvent e) {
 				click.play();
-				new VentanaRegistro(u);
+				new VentanaRegistro();
 				frame.dispose();
 			}
 		});
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\registrate.png"));
+		lblNewLabel.setIcon(new ImageIcon(getClass().getResource("/Recursos/registrate.png")));
 		lblNewLabel.setBounds(12, 68, 361, 83);
 		panel_3.add(lblNewLabel);
 

@@ -2,22 +2,28 @@ package Registro;
 
 import java.util.ArrayList;
 
-import javax.xml.soap.Text;
-
 import java.awt.*;
 import Modelos.*;
 import javax.swing.JLabel;
 
 public class Juego {
-
+	static Usuario user;
+	static Inventario invent;
 	static int vidas=3;
 	static int puntos;
+	
 	
 	public static int Aleatorio(int Max, int Min) {
 		return (int) (Math.random() * (Max - Min));
 
 	}
-	public static void main(String[] args) {
+	
+	public Juego(Usuario u, Inventario i) {
+		this.user = u;
+		this.invent = i;
+		Initialize();
+	}
+	public static void Initialize() {
 	
 	
 		Ventana nuestraventana = new Ventana("Wall Defense");
@@ -82,7 +88,7 @@ public class Juego {
 		ArregloDeObjetos.add(asteoride5);
 		ArregloDeObjetos.add(nave);
 
-		PanelFG nuestroPanel = new PanelFG(ArregloDeObjetos);
+		PanelFG nuestroPanel = new PanelFG(ArregloDeObjetos, user, invent);
 		
 
 		nuestroPanel.refNave(nave);
