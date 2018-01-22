@@ -27,7 +27,7 @@ public class Usuario {
 		this.nombre = null;
 		this.apellido = null;
 		this.edad = 0;
-
+		this.eleccion = 1;
 		this.contraseña = null;
 		this.monedas = 0;
 		this.nick = null;
