@@ -10,7 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class VentanaTienda extends JFrame {
-	private int monedas;
+	private int monedas = BD.selectMonedas(user);
 	private JLabel labelDinero;
 	private JButton btnCompraArco;
 	private JButton btnCompraBaston;
@@ -29,13 +29,16 @@ public class VentanaTienda extends JFrame {
 	private JPanel panel_7;
 	private JLabel lblVolverMenu;
 	private JButton btnNewButton;
+	private static Usuario user;
+	private static Inventario invent;
+	
 	
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaTienda window = new VentanaTienda();
+					VentanaTienda window = new VentanaTienda(user, invent);
 					window.tienda.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,7 +48,9 @@ public class VentanaTienda extends JFrame {
 	}
 	
 	
-	public VentanaTienda(){
+	public VentanaTienda(Usuario u, Inventario i){
+		this.user = u;
+		this.invent = i;
 		Initialize();
 	}
 	
@@ -83,9 +88,13 @@ public class VentanaTienda extends JFrame {
 		btnCompraArco = new JButton("");
 		btnCompraArco.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				
+				if(getMonedas() >= 3000 && BD.selectInventarioP2(BD.selectInventario(user.getNick()))==0){
+					monedas -= 3000;
+					invent.setP2(1);
+					BD.modificarInventario(invent);
+				}else{
+					System.out.println("No hay suficientes monedas");
+				}
 			}
 		});
 	
@@ -109,11 +118,11 @@ public class VentanaTienda extends JFrame {
 		
 		btnCompraBaston.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(getMonedas() >= 5000){
+				if(getMonedas() >= 5000 && BD.selectInventarioP3(BD.selectInventario(user.getNick()))==0){
 					monedas -= 5000;
-				}
-				
-				else {
+					invent.setP3(1);
+					BD.modificarInventario(invent);
+				}else{
 					System.out.println("No hay suficientes monedas");
 				}
 			}
@@ -124,7 +133,7 @@ public class VentanaTienda extends JFrame {
 		btnSalir = new JButton();
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentanaMenu menu = new VentanaMenu();
+				VentanaMenu menu = new VentanaMenu(user, invent);
 				tienda.setVisible(false);
 				atras.play();
 				musicatienda.stop();
@@ -147,7 +156,7 @@ public class VentanaTienda extends JFrame {
 		lblTienda.setBounds(257, 13, 405, 73);
 		tienda.getContentPane().add(lblTienda);
 		
-		lblPrecioArco = new JLabel("Monedas: 1000");
+		lblPrecioArco = new JLabel("Monedas: 3000");
 		lblPrecioArco.setBorder(new LineBorder(new Color(204, 153, 51), 3, true));
 		lblPrecioArco.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrecioArco.setForeground(Color.ORANGE);
@@ -183,9 +192,6 @@ public class VentanaTienda extends JFrame {
 		JButton button = new JButton("");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				
 			}
 		});
 		button.setIcon(new ImageIcon(getClass().getResource("/Recursos/dagas.png")));
@@ -254,43 +260,27 @@ public class VentanaTienda extends JFrame {
 		tienda.getContentPane().add(lblVolverMenu);
 		
 		
-		
-		
-		
-		
-		
-		
-		
-
-		JButton b = new JButton("");
-		b.addActionListener(new ActionListener() {
+		JButton btnMonedas = new JButton("");
+		btnMonedas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
 				coins.play();
 				monedas=monedas +1;
-				
 				labelDinero.setText("Monedas: "+monedas);
-				
-				
-				
 			}
 		});
 		
 
-		b.setOpaque(false);
-		b.setFont(new Font("Bauhaus 93", Font.PLAIN, 60));
-		b.setContentAreaFilled(false);
-		b.setBorder(null);
-
-		b.setBounds(64, 451, 133, 89);
-
+		btnMonedas.setOpaque(false);
+		btnMonedas.setFont(new Font("Bauhaus 93", Font.PLAIN, 60));
+		btnMonedas.setContentAreaFilled(false);
+		btnMonedas.setBorder(null);
+		btnMonedas.setBounds(64, 451, 133, 89);
 		ImageIcon fot = new ImageIcon(getClass().getResource("/Recursos/masmonedas.png"));
-		Icon icono = new ImageIcon(fot.getImage().getScaledInstance(b.getWidth(), b.getHeight(),
+		Icon icono = new ImageIcon(fot.getImage().getScaledInstance(btnMonedas.getWidth(), btnMonedas.getHeight(),
 				Image.SCALE_DEFAULT));
-		b.setIcon(icono);
+		btnMonedas.setIcon(icono);
 		this.repaint();
-		tienda.getContentPane().add(b);
+		tienda.getContentPane().add(btnMonedas);
 		
 		
 		
