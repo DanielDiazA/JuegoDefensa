@@ -1,3 +1,10 @@
+/**
+ * Ventana del login desde la cual puedes logearte o dirigirte a la ventana de registro si no tienes usuario
+ * @author Jonathan Blazquez y Daniel Diaz
+ * @version 1.0
+ */
+
+
 package Registro;
 
 import java.awt.EventQueue;
@@ -22,57 +29,48 @@ import java.applet.*;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.awt.Font;
 
 public class VentanaPrincipal extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JFrame frame;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	public Usuario u;
+	public static Usuario user;
+	public static Inventario invent;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
+	public static ArrayList<Usuario> usuarios = new ArrayList<Usuario>();//donde guardamos los users
+/**
+ * Metodo para añadir un suario al ArrayList usuarios
+ * @param u
+ */
+	public static void añadirUser(Usuario u) {
 
-					VentanaPrincipal window = new VentanaPrincipal();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		usuarios.add(u);
+
 	}
 
-	/**
-	 * Create the application.
-	 */
-	public VentanaPrincipal() {
+	public VentanaPrincipal(Usuario u, Inventario i) {
+		this.user = u;
+		this.invent = i;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
-
+		
+		//Musica de fondo
 		AudioClip musicafondo;
 		musicafondo = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/LOTR.wav"));
-		
 		musicafondo.play();
-
+		//sonido al clickar
 		AudioClip click;
 		click = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/click.wav"));
+		
+		
 		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dani\\Desktop\\icono.png"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Recursos/icono.png")));
 		frame.setBounds(500, 200, 800, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(2, 0, 0, 0));
@@ -84,9 +82,9 @@ public class VentanaPrincipal extends JFrame {
 		frame.getContentPane().add(panel);
 		panel.setBackground(new Color(173, 216, 230));
 		panel.setLayout(null);
-		
+
 		JLabel lblPantalla = new JLabel("pantalla");
-		lblPantalla.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\pantallap.png"));
+		lblPantalla.setIcon(new ImageIcon(getClass().getResource("/Recursos/pantallap.png")));
 		lblPantalla.setBounds(0, 0, 794, 232);
 		panel.add(lblPantalla);
 
@@ -125,31 +123,52 @@ public class VentanaPrincipal extends JFrame {
 
 		JLabel lblLogin = new JLabel("");
 		lblLogin.addMouseListener(new MouseAdapter() {
-			@Override
+//Comprobamos que el user y la contraseña son correctas , podemos oguearnos como admins
 			public void mouseClicked(MouseEvent e) {
-				String nombre = "admin";
-				char[] arrayC = passwordField.getPassword();
 				click.play();
-				String pass = new String(arrayC);
-				String contra = "admin";
-				if (textField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+				// String pass = passwordField.getPassword().toString();
+				// String contra = BD.selectPass(textField.getText());
+
+				if (textField.getText().isEmpty() || passwordField.getPassword().toString().isEmpty()) {
 					JOptionPane.showMessageDialog(frame, "Algun campo esta sin rellenar");
 				} else {
-					if (textField.getText().equals(nombre) && pass.equals(contra)) {
-						new VentanaMenu();
-						frame.dispose();
+					char[] pass1 = passwordField.getPassword();
+					String passString = new String(pass1);
+					if (passString.equals("admin") && textField.getText().equals("admin")) {
+						// Usuario user =
+						// BD.selectUsuario(textField.getText());
+						Usuario usuario = new Usuario("admin", "admin", 66, "admin", 99999, "admin", 1);
+						Inventario inventario = new Inventario(usuario.nick, 0, 0, 0);
+						new VentanaMenu(usuario, inventario);
+
+						frame.setVisible(false);
+						
 						musicafondo.stop();
 
 					} else {
-						JOptionPane.showMessageDialog(frame, "Usuario y/o contraseña no son correctos");
-
+						if(usuarios.size()>0){
+						for (int i = 0; i < usuarios.size(); i++) {
+							
+							if (usuarios.get(i).nombre.equals(textField.getText())
+									&& usuarios.get(i).contraseña.equals(passString)) {
+								Inventario inv = new Inventario();
+								new VentanaMenu(usuarios.get(i), inv);
+								musicafondo.stop();
+								frame.setVisible(false);
+								
+							} else {
+								JOptionPane.showMessageDialog(frame, "Usuario y/o contraseña no son correctos");
+								}
+							}	
+							}else{JOptionPane.showMessageDialog(frame, "No hay Usuarios creados");
+						}
 					}
-
 				}
 			}
 
 		});
-		lblLogin.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\login.png"));
+
+		lblLogin.setIcon(new ImageIcon(getClass().getResource("/Recursos/login.png")));
 		lblLogin.setBounds(149, 145, 256, 74);
 		panel_2.add(lblLogin);
 
@@ -160,19 +179,32 @@ public class VentanaPrincipal extends JFrame {
 
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.addMouseListener(new MouseAdapter() {
-			@Override
+
 			public void mouseClicked(MouseEvent e) {
-
-				
 				click.play();
-				new VentanaRegistro(u);
-				frame.dispose();
+				musicafondo.stop();
 
+				new VentanaRegistro();
+				frame.dispose();
 			}
 		});
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Dani\\Desktop\\Recursos\\registrate.png"));
+		lblNewLabel.setIcon(new ImageIcon(getClass().getResource("/Recursos/registrate.png")));
 		lblNewLabel.setBounds(12, 68, 361, 83);
 		panel_3.add(lblNewLabel);
 
 	}
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaPrincipal window = new VentanaPrincipal(user, invent);
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 }

@@ -1,3 +1,9 @@
+/**
+ * Hereda de la clase JFrame e implementa la Interfaz WindowListener.Es una ventana personalizable(Sin mucha importancia).
+ * @author Jonathan Blazquez y Daniel Diaz
+ * @version 1.0
+ */
+
 package Modelos;
 
 import java.awt.Color;
@@ -13,8 +19,6 @@ public class Ventana extends JFrame implements WindowListener {
 		addWindowListener(this);
 		setBackground(Color.white);
 	}
-
-	
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {}

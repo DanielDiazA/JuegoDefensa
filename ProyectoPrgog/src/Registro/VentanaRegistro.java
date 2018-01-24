@@ -1,3 +1,8 @@
+/**
+ * Ventana en la que ase registran los nuevos usuarios.
+ * @author Jonathan Blazquez y Daniel Diaz
+ * @version 1.0
+ */
 package Registro;
 
 import java.awt.EventQueue;
@@ -20,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.awt.Window.Type;
 import javax.swing.JPasswordField;
 
@@ -38,6 +44,7 @@ public class VentanaRegistro extends JFrame {
 	private JPasswordField passwordField_1;
 
 
+
 	/**
 	 * Launch the application.
 	 */
@@ -45,8 +52,7 @@ public class VentanaRegistro extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Usuario u =new Usuario();
-					VentanaRegistro window = new VentanaRegistro(u);
+					VentanaRegistro window = new VentanaRegistro();
 					window.frmRegistroUsuario.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,17 +61,37 @@ public class VentanaRegistro extends JFrame {
 		});
 	}
 
+	//Metodo para comprobar que dos contraseñas son iguales
+	public static boolean isPasswordCorrect(char[] j1,char[] j2) { 
+		boolean valor = true; 
+		int puntero = 0; 
+		if (j1.length != j2.length){ 
+		valor = false; 
+		} 
+		else{ 
+		while((valor)&&(puntero < j1.length)){ 
+		if (j1[puntero] != j2[puntero]){ 
+		valor = false; 
+		} 
+		puntero++; 
+		} 
+		} 
+		return valor; 
+		}
+	
+	
 	/**
 	 * Create the application.
 	 */
-	public VentanaRegistro(	Usuario u) {
+	public VentanaRegistro() {
 		
 		frmRegistroUsuario = new JFrame();
 		frmRegistroUsuario.setType(Type.POPUP);
 		frmRegistroUsuario.setTitle("Registro Usuario");
 		frmRegistroUsuario.setForeground(Color.ORANGE);
 		frmRegistroUsuario.setBounds(500, 200, 800, 500);
-		frmRegistroUsuario.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dani\\Desktop\\icono.png"));
+		frmRegistroUsuario.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Recursos/icono.png")));
+		
 		frmRegistroUsuario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRegistroUsuario.getContentPane().setLayout(new GridLayout(7, 0, 0, 0));
 		frmRegistroUsuario.setResizable(false);// Para no maximizar la
@@ -89,6 +115,7 @@ public class VentanaRegistro extends JFrame {
 				String nombre = textField_1.getText();
 				nombre = nombre.toUpperCase();
 				for (int i = 0; i < nombre.length(); i++) {
+					//comprobar que el nombre no tenga caracteres no pemitidos
 					if (nombre.charAt(i) < 'A' || nombre.charAt(i) > 'Z') {
 						JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
 						textField_1.setText(textField_1.getText().substring(0, textField_1.getText().length() - 1));
@@ -110,6 +137,7 @@ public class VentanaRegistro extends JFrame {
 				nombre = nombre.toUpperCase();
 				for (int i = 0; i < nombre.length(); i++) {
 					if (nombre.charAt(i) < 'A' || nombre.charAt(i) > 'Z') {
+						//comprobar que el apellido no tenga caracteres no pemitidos
 						JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
 						textField.setText(textField.getText().substring(0, textField.getText().length() - 1));
 						//u.setNombre(nombre);
@@ -150,23 +178,27 @@ public class VentanaRegistro extends JFrame {
 		textField_2.addKeyListener(new KeyAdapter() {
 			
 			public void keyReleased(KeyEvent e) {
-			int	k = Integer.parseInt(textField_2.getText()); 
-			
-
-				for (int i = 0; i < textField_2.getText().length(); i++) {
-					if (Character.isDigit(textField_2.getText().charAt(i)) == false) {
-						JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
-						textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
-					} else {
+				try {
+					int	k = Integer.parseInt(textField_2.getText());
+					//comprobar quela edad este entre 1-100 años
 					if (k>100||k<0) {
 						JOptionPane.showMessageDialog(frmRegistroUsuario, "La edad solo puede estar entre 0 y 100 años");
 							textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
-						}
 					}
-
+					
+				}catch(Exception ex) {
+	
+					for (int i = 0; i < textField_2.getText().length(); i++) {
+						//comprobar que no se escriben caracteres no permitidos en la edad
+						if (Character.isDigit(textField_2.getText().charAt(i)) == false) {
+							JOptionPane.showMessageDialog(frmRegistroUsuario, "Caracteres no permitidos");
+							textField_2.setText(textField_2.getText().substring(0, textField_2.getText().length() - 1));
+						}
+					}	
 				}
 			}
 		});
+		
 		textField_2.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 		textField_2.setColumns(10);
 		textField_2.setBounds(280, 13, 452, 35);
@@ -188,6 +220,7 @@ public class VentanaRegistro extends JFrame {
 				
 			}
 		});
+		
 		textField_3.setFont(new Font("Bauhaus 93", Font.PLAIN, 26));
 		textField_3.setColumns(10);
 		textField_3.setBounds(280, 14, 452, 35);
@@ -222,41 +255,66 @@ public class VentanaRegistro extends JFrame {
 		JPanel panel_6 = new JPanel();
 		frmRegistroUsuario.getContentPane().add(panel_6);
 		panel_6.setLayout(null);
-
+		
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String pass = passwordField.getPassword().toString();
-				String pass2 = passwordField_1.getPassword().toString();
-
+			public void actionPerformed(ActionEvent arg0) {//comprobar que todos los campos estan llenos
 				if (textField.getText().isEmpty() || textField_1.getText().isEmpty() || textField_2.getText().isEmpty()
 						|| textField_3.getText().isEmpty() || passwordField_1.getPassword().toString().isEmpty()
 						|| passwordField.getPassword().toString().isEmpty()) {
 					JOptionPane.showMessageDialog(frmRegistroUsuario, "Tienes que rellenar todos los espacios");
 
 				} else {
-					if (pass.equals(pass2)) {
-						String str = textField_2.getText(); 
-						BD.insertarUsuario(textField_3.getText(), passwordField_1.getPassword().toString(), textField_1.getText(), textField.getText(), Integer.parseInt(str), 0);
-						BD.insertarInventario(textField_3.getText(), 1, 0, 0);
-						BD.insertarRanking(textField_3.getText(), 0);
+					//comparamos que las contraseñas sean iguales
+					char[] pass1 = passwordField_1.getPassword();
+					char[] pass2 = passwordField.getPassword();
+					if(isPasswordCorrect(pass1,pass2)) {
+//						try {
+//							ArrayList<String> nicksBD = BD.getNicks();
+//							if(nicksBD.contains(textField.getText())) {
+//								JOptionPane.showMessageDialog(frmRegistroUsuario, "Ya hay un usuario con ese nick");
+//							}
+//						}catch(Exception e){	
+//							String str = textField_2.getText().toString();
+//							Usuario user = new Usuario(textField.getText(),textField_1.getText(),Integer.parseInt(str),passwordField_1.getPassword().toString(),0,textField_3.getText(),1);
+//							Inventario invent = new Inventario(user);
+							
+//							BD.insertarUsuario(user);
+//							BD.insertarInventario(invent);
+						
+						//creamos el nuevo usuario
+						String nombre= textField.getText();
+						
+						String apellido =textField_1.getText();
+						
+						int edad=Integer.parseInt(textField_2.getText());
 						
 						
-						//Guardar datos del Usuario
-//						u.setNombre(textField.getText());
-//						u.setEdad(Integer.parseInt(textField_2.getText()));
-//						u.setDinero(0);
-//						u.setApellido(textField_1.getText());
-//						u.setNick(textField_3.getText());
-//						u.setContraseña(pass);
-						new VentanaPrincipal();
-						frmRegistroUsuario.setVisible(false);;
-					} else {
-						JOptionPane.showMessageDialog(frmRegistroUsuario, "Verifica que las contraseñas son iguales");
+						String contraseña = new String(pass1);
+						
+						int dinero=0;
+						
+						String nick=textField_3.getText();
+						
+						int eleccion=1;
+						
+						//creacion
+							Usuario u = new Usuario(nombre,apellido,edad,contraseña,dinero,nick,eleccion);
+							//meterlo en el ArrayList
+							VentanaPrincipal.añadirUser(u);
+							Inventario i = new Inventario();
+							new VentanaPrincipal(u,i);
+							frmRegistroUsuario.dispose();
+						}
+					//}
+				else{
+					JOptionPane.showMessageDialog(frmRegistroUsuario, "Verifica que las contraseñas son iguales");
 					}
 				}
 			}
-		});
+		}
+	);
+		
 		btnRegistrarse.setBackground(new Color(154, 205, 50));
 		btnRegistrarse.setForeground(new Color(0, 0, 0));
 		btnRegistrarse.setFont(new Font("Snap ITC", Font.PLAIN, 26));
@@ -266,8 +324,9 @@ public class VentanaRegistro extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			
-				new VentanaPrincipal();
+				Usuario u = new Usuario();
+				Inventario i = new Inventario();
+				new VentanaPrincipal(u, i);
 				frmRegistroUsuario.dispose();
 
 			}

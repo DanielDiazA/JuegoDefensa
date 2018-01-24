@@ -1,9 +1,16 @@
+/**
+ * Clase padre de RectanguloGrafico, hereda de la clase Coordenada.Se utiliza para que la clase RectanguloGrafico 
+ * herede los atributos lado1 y lado2.
+ * @author Jonathan Blazquez y Daniel Diaz
+ * @version 1.0
+ */
+
 package Modelos;
 
 public class Rectangulo extends Coordenada {
 
-	private float lado1;
-	private float lado2;
+	private float lado1;//Primer Lado
+	private float lado2;//Segundo Lado
 	
 	public Rectangulo(){
 		
@@ -25,6 +32,8 @@ public class Rectangulo extends Coordenada {
 		this.lado1=rc.lado1;
 		this.lado2=rc.lado2;
 	}
+	
+	//Getters y Setters. 
 	
 	public float Getlado(int lado){
 		

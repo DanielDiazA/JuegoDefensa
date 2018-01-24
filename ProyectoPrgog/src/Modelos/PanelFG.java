@@ -1,5 +1,12 @@
+/**
+ * Logica del juego.Movimiento , Colision , Enemigos , Fin de la partida etc...
+ * @author Jonathan Blazquez y Daniel Diaz
+ * @version 1.0
+ */
+
 package Modelos;
 
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -11,50 +18,71 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.xml.soap.Text;
 
+import Registro.Inventario;
+import Registro.Juego;
+import Registro.Rank;
+import Registro.Usuario;
 import Registro.VentanaMenu;
+import Registro.VentanaRanking;
 
 public class PanelFG extends JPanel implements KeyListener {
+	
+	
+	Usuario user;//Usuario
+	Inventario invent;//Inventario
 
-	
-	
 	public JPanel PanelEmergente;
+	
+	
+	int nMuertos;//Cantidad de enemigos destruidos
 
+	
+	/**
+	 * Calcular un numero semialeatorio
+	 * @param Max
+	 * @param Min
+	 * @return
+	 */
 	public static int Aleatorio(int Max, int Min) {
 		return (int) (Math.random() * (Max - Min));
 	}
 
+	
+	
+	
 	ArrayList v;
 	ArrayList ast = new ArrayList();
 
 	NaveGrafica nave;
-	Coordenada movimientoIzq = new Coordenada(-25, 0);
-	Coordenada movimientoDer = new Coordenada(25, 0);
-	Coordenada movimientoNulo = new Coordenada(0, 0);
+	Coordenada movimientoIzq = new Coordenada(-25, 0);//movimiento hacia la izquierda
+	Coordenada movimientoDer = new Coordenada(25, 0);//movimiento hacia la derecha
+	Coordenada movimientoNulo = new Coordenada(0, 0);//sin movimiento
 
-	Boolean FinDeJuego = true;
+	Boolean FinDeJuego = true;//true se sigue jugando , false se termina juego
 
-	int ContadorAsteroides = 5;
+	int ContadorAsteroides = 5;//cantidad de enemigos
 
-	TextoGrafico puntos;
-	TextoGrafico vidas;
-	TextoGrafico Final;
+	TextoGrafico puntos;//Puntuacion
+	TextoGrafico vidas;//Vidas
+	TextoGrafico Final;//Texto al perder
 
-	int Score;
-	int Vidas = 3;
+	int Score;//puntuacion
+	int Vidas = 3;//vida inicial
 
-	int Mov = 6;
-	int MAXAST = 5;
+	int Mov = 2;//movimiento de enemigo inicia
+	int MAXAST = 5;//cantidad maxima de enemigos iniciales
 
-	public PanelFG(ArrayList vectordeO) {
+	public PanelFG(ArrayList vectordeO, Usuario u, Inventario i) {
 		this.v = vectordeO;
+		this.user = u;
+		this.invent = i;
 		this.addKeyListener(this);
 		setFocusable(true);
 	}
 
 	public void paint(Graphics g) {
-		// para no parpadeos
+		// para que no parpadee
 		Dimension d = getSize();
 		Image Imagen = createImage(d.width, d.height);
 		Graphics buff = Imagen.getGraphics();
@@ -84,14 +112,14 @@ public class PanelFG extends JPanel implements KeyListener {
 				nave.mover(movimientoNulo);
 
 			} else {
-				this.nave.mover(movimientoIzq);
+				this.nave.mover(movimientoIzq);//movimiento izq
 			}
 		}
 		if (tecla == KeyEvent.VK_RIGHT) {
 			if (this.nave.getX() >= 800) {
 				nave.mover(movimientoNulo);
 			} else {
-				this.nave.mover(movimientoDer);
+				this.nave.mover(movimientoDer);//movimiento der
 			}
 		}
 		if (tecla == KeyEvent.VK_Q) {
@@ -99,6 +127,29 @@ public class PanelFG extends JPanel implements KeyListener {
 
 	}
 
+	//Sonidos
+	//al subir de lvl
+	class subirN extends Thread {
+		public void run() {
+			AudioClip lvlup;
+			lvlup = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/lvlup.wav"));
+			lvlup.play();
+			
+			
+		}
+	}
+	
+	//al impactar enemigos
+	class impacto extends Thread {
+		public void run() {
+			AudioClip imp;
+			imp = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/impacto.wav"));
+			imp.play();
+			
+			
+		}
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 
@@ -108,7 +159,7 @@ public class PanelFG extends JPanel implements KeyListener {
 				nave.mover(movimientoNulo);
 
 			} else {
-				this.nave.mover(movimientoIzq);
+				this.nave.mover(movimientoIzq);//movimiento izq
 			}
 
 		}
@@ -116,13 +167,37 @@ public class PanelFG extends JPanel implements KeyListener {
 			if (this.nave.getX() >= 800) {
 				nave.mover(movimientoNulo);
 			} else {
-				this.nave.mover(movimientoDer);
+				this.nave.mover(movimientoDer);//movimiento der
 			}
 		}
 		if (tecla == KeyEvent.VK_Q) {
-			CirculoGrafico bala = nave.Bala();
-			nave.balas.add(bala);
-			v.add(bala);
+			//lanzamientos de balas
+			//con rogorn
+			if (user.getEleccion() == 1) {
+				CirculoGrafico bala = nave.Bala();
+				bala.pintar(Color.yellow);
+				nave.balas.add(bala);
+				v.add(bala);
+				
+			//con logolos
+			} else if (user.getEleccion() == 2) {
+				CirculoGrafico bala = nave.Bala();
+				bala.pintar(Color.blue);
+				nave.balas.add(bala);
+				v.add(bala);
+				
+				
+			}
+			//con gondolf
+			else if (user.getEleccion() == 3) {
+				CirculoGrafico bala = nave.Bala();
+				bala.pintar(Color.red);
+				nave.balas.add(bala);
+				v.add(bala);
+				
+				
+			}
+
 		}
 
 	}
@@ -162,7 +237,7 @@ public class PanelFG extends JPanel implements KeyListener {
 		this.Final = c;
 
 	}
-
+	//Todas las colisiones
 	public void Colision() {
 		for (int i = 0; i < nave.balas.size(); i++) {
 
@@ -174,26 +249,40 @@ public class PanelFG extends JPanel implements KeyListener {
 				Coordenada derecha = new Coordenada(aste.getX() + 30, aste.getY());
 				Coordenada izquierda = new Coordenada(aste.getX() - 15, aste.getY());
 				Coordenada medio = new Coordenada(aste.getX(), aste.getY());
-
+				//impacatamos enemigos
 				if (Corbala.getX() > izquierda.getX() && Corbala.getX() < derecha.getX()
 						&& Corbala.getY() < medio.getY() && Corbala.getY() + 25 > medio.getY()) {
-
+					nMuertos++;
 					aste.pintar(Color.black);
 					bala.pintar(Color.black);
 					bala.setY(2000);
 					aste.setY(2000);
 					nave.balas.remove(bala);
 					ast.remove(aste);
+					
 					ContadorAsteroides--;
 					Score += 5;
 					puntos.SetColor(Color.black);
 					String NuevoScore = "" + Score;
 					TextoGrafico Nrpuntos = new TextoGrafico(NuevoScore, Color.blue, 1700, 850);
 					Nrpuntos.setSize(40);
+					
+					vidas.SetColor(Color.black);
+					String nuevaaVidaa = "" + Vidas;
+					TextoGrafico Nrvidas = new TextoGrafico(nuevaaVidaa, Color.red, 1700, 550);
+					Nrvidas.setSize(40);
+					vidas = Nrvidas;
+					
+					
+					
 					puntos = Nrpuntos;
 					v.add(puntos);
+					v.add(vidas);
+					impacto imp =new  impacto();
+					imp.start();
+					
 
-				}
+				}//nos impactan
 				if ((medio.getY() > 475 && medio.getY() < 550) && (nave.cor1.getX() < medio.getX())
 						&& (nave.cor2.getX() > medio.getX())) {
 
@@ -202,10 +291,10 @@ public class PanelFG extends JPanel implements KeyListener {
 					System.out.println(Vidas);
 
 					String nuevoScore = "" + Score;
-					String nuevaaVidaa = "" + Vidas;
+					
 					vidas.SetColor(Color.black);
 					puntos.SetColor(Color.black);
-
+					String nuevaaVidaa = "" + Vidas;
 					TextoGrafico Nrvidas = new TextoGrafico(nuevaaVidaa, Color.red, 1700, 550);
 					Nrvidas.setSize(40);
 					vidas = Nrvidas;
@@ -228,113 +317,7 @@ public class PanelFG extends JPanel implements KeyListener {
 		}
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	static int vidas1=3;
-	static int puntos1;
-	
-	public void jugar (){
-		
-		Ventana nuestraventana = new Ventana("Wall Defense");
-		nuestraventana.setResizable(false);
-		nuestraventana.setLocation(400, 200);
-		ArrayList ArregloDeObjetos = new ArrayList();
-
-		Coordenada cor1 = new Coordenada(250, 250);
-		Coordenada cor2 = new Coordenada(350, 350);
-
-		// NAVEEEE
-
-		Coordenada cor3 = new Coordenada(475, 500);
-		Coordenada cor4 = new Coordenada(425, 575);
-		Coordenada cor5 = new Coordenada(525, 575);
-
-		NaveGrafica nave = new NaveGrafica(cor3, cor4, cor5, Color.yellow);
-
-		
-
-		TextoGrafico Vidas = new TextoGrafico("Vidas", Color.red, 1700, 400);
-		Vidas.setSize(35);
-		ArregloDeObjetos.add(Vidas);
-		TextoGrafico Puntos = new TextoGrafico("Puntos", Color.blue, 1700, 700);
-
-		Puntos.setSize(30);
-		ArregloDeObjetos.add(Puntos);
-
-		TextoGrafico Puntuaje = new TextoGrafico("0", Color.blue, 1700, 850);
-		Puntuaje.setSize(40);
-		ArregloDeObjetos.add(Puntuaje);
-
-		TextoGrafico Numvidas = new TextoGrafico("3", Color.red, 1700, 550);
-		Numvidas.setSize(40);
-		ArregloDeObjetos.add(Numvidas);
-
-		TextoGrafico textofinal = new TextoGrafico("FIN", Color.white, 900, 500);
-		textofinal.setSize(120);
-
-		int rango1 = Aleatorio(800, 50);
-		Coordenada Salida1 = new Coordenada(rango1, -40);
-		RectanguloGrafico asteoride1 = new RectanguloGrafico(Salida1, 25, 25, Color.GREEN);
-		int rango2 = Aleatorio(800, 50);
-		Coordenada Salida2 = new Coordenada(rango2, -25);
-		RectanguloGrafico asteoride2 = new RectanguloGrafico(Salida2, 25, 25, Color.GREEN);
-		int rango3 = Aleatorio(800, 50);
-		Coordenada Salida3 = new Coordenada(rango3, -80);
-		RectanguloGrafico asteoride3 = new RectanguloGrafico(Salida3, 25, 25, Color.GREEN);
-		int rango4 = Aleatorio(800, 50);
-		Coordenada Salida4 = new Coordenada(rango4, -120);
-		RectanguloGrafico asteoride4 = new RectanguloGrafico(Salida4, 25, 25, Color.GREEN);
-		int rango5 = Aleatorio(800, 50);
-		Coordenada Salida5 = new Coordenada(rango5, -200);
-		RectanguloGrafico asteoride5 = new RectanguloGrafico(Salida5, 25, 25, Color.GREEN);
-
-		ArregloDeObjetos.add(asteoride1);
-		ArregloDeObjetos.add(asteoride2);
-		ArregloDeObjetos.add(asteoride3);
-		ArregloDeObjetos.add(asteoride4);
-		ArregloDeObjetos.add(asteoride5);
-		ArregloDeObjetos.add(nave);
-
-		PanelFG nuestroPanel = new PanelFG(ArregloDeObjetos);
-		
-
-		nuestroPanel.refNave(nave);
-		
-		nuestroPanel.refAst(asteoride1, asteoride2, asteoride3, asteoride4, asteoride5);
-		
-		
-		nuestroPanel.refFinal(textofinal);
-		nuestroPanel.refPuntos(Numvidas);
-		nuestroPanel.refVidas(Puntuaje);
-		
-		
-		nuestraventana.getContentPane().add(nuestroPanel);
-		nuestroPanel.setLayout(null);
-	
-		nuestraventana.setSize(1000, 600);
-		nuestraventana.setVisible(true);
-		nuestraventana.setBackground(Color.black);
-		nuestroPanel.iniciar();
-	
-
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//Iniciar juego
 	public void iniciar() {
 		while (FinDeJuego) {
 
@@ -348,13 +331,13 @@ public class PanelFG extends JPanel implements KeyListener {
 					rect.Ciclo(Mov);
 					if (rect.getY() > 525) {
 
-						int rango = Aleatorio(800, 50);
+						int rango = Aleatorio(800, 50);//rango de aparicion de enemigos
 						rect.setY(0);
 						rect.setX(rango);
 
 						Score = Score - 5;
 						Vidas--;
-						System.out.println(Vidas);
+						
 
 						String nuevoScore = "" + Score;
 						String nuevaaVidaa = "" + Vidas;
@@ -375,6 +358,8 @@ public class PanelFG extends JPanel implements KeyListener {
 					}
 
 				}
+				
+				//Nivelado
 				if (ContadorAsteroides < MAXAST) {
 
 					int rango = Aleatorio(800, 50);
@@ -385,6 +370,7 @@ public class PanelFG extends JPanel implements KeyListener {
 					nuevo.Ciclo(Mov);
 					ContadorAsteroides++;
 				}
+				//Nivel 1
 				int nivel = 1;
 				String niveles = "" + nivel;
 				TextoGrafico TextoNivel = new TextoGrafico("Nivel", Color.ORANGE, 1700, 950);
@@ -393,9 +379,59 @@ public class PanelFG extends JPanel implements KeyListener {
 				TextoNrNivel.setSize(60);
 				v.add(TextoNrNivel);
 				v.add(TextoNivel);
-
+				//Nivel 2
 				if (Score >= 50 && Score < 100) {
 					nivel = 2;
+					
+					if(Score == 50){
+					subirN lvl = new subirN();
+					lvl.start();
+					}
+					
+					String NuevoNivel = "" + nivel;
+					TextoNrNivel.SetColor(Color.black);
+					TextoGrafico NrNivel = new TextoGrafico(NuevoNivel, Color.ORANGE, 1700, 1050);
+					NrNivel.setSize(60);
+					TextoNrNivel = NrNivel;
+					v.add(TextoNrNivel);
+					Mov = 3;
+					MAXAST = 6;
+					for (int i = 0; i < ast.size(); i++) {
+
+						RectanguloGrafico rect = (RectanguloGrafico) ast.get(i);
+						rect.pintar(Color.MAGENTA);
+
+					}
+				}
+				//Nivel 3
+				if (Score >= 100 && Score < 200) {
+					nivel = 3;
+					if(Score == 100){
+						subirN lvl = new subirN();
+						lvl.start();
+						}
+					String NuevoNivel = "" + nivel;
+					TextoNrNivel.SetColor(Color.black);
+					TextoGrafico NrNivel = new TextoGrafico(NuevoNivel, Color.ORANGE, 1700, 1050);
+					NrNivel.setSize(60);
+					TextoNrNivel = NrNivel;
+					v.add(TextoNrNivel);
+					Mov = 4;
+					MAXAST = 5;
+					for (int i = 0; i < ast.size(); i++) {
+
+						RectanguloGrafico rect = (RectanguloGrafico) ast.get(i);
+						rect.pintar(Color.BLUE);
+
+					}
+				}
+				//Nivel 4
+				if (Score >= 200 && Score < 300) {
+					nivel = 4;
+					if(Score == 200){
+						subirN lvl = new subirN();
+						lvl.start();
+						}
 					String NuevoNivel = "" + nivel;
 					TextoNrNivel.SetColor(Color.black);
 					TextoGrafico NrNivel = new TextoGrafico(NuevoNivel, Color.ORANGE, 1700, 1050);
@@ -407,12 +443,41 @@ public class PanelFG extends JPanel implements KeyListener {
 					for (int i = 0; i < ast.size(); i++) {
 
 						RectanguloGrafico rect = (RectanguloGrafico) ast.get(i);
-						rect.pintar(Color.MAGENTA);
+						rect.pintar(Color.orange);
 
 					}
 				}
-				if (Score >= 101 && Score < 150000000) {
-					nivel = 3;
+				//Nivel 5
+				if (Score >= 300 && Score < 400) {
+					nivel = 5;
+					if(Score == 300){
+						subirN lvl = new subirN();
+						lvl.start();
+						
+						
+						}
+					String NuevoNivel = "" + nivel;
+					TextoNrNivel.SetColor(Color.black);
+					TextoGrafico NrNivel = new TextoGrafico(NuevoNivel, Color.ORANGE, 1700, 1050);
+					NrNivel.setSize(60);
+					TextoNrNivel = NrNivel;
+					v.add(TextoNrNivel);
+					Mov = 5;
+					MAXAST = 6;
+					for (int i = 0; i < ast.size(); i++) {
+
+						RectanguloGrafico rect = (RectanguloGrafico) ast.get(i);
+						rect.pintar(Color.white);
+
+					}
+				}
+				//Nivel 6
+				if (Score >= 400 && Score < 1000000) {
+					nivel = 6;
+					if(Score == 400){
+						subirN lvl = new subirN();
+						lvl.start();
+						}
 					String NuevoNivel = "" + nivel;
 					TextoNrNivel.SetColor(Color.black);
 					TextoGrafico NrNivel = new TextoGrafico(NuevoNivel, Color.ORANGE, 1700, 1050);
@@ -420,41 +485,68 @@ public class PanelFG extends JPanel implements KeyListener {
 					TextoNrNivel = NrNivel;
 					v.add(TextoNrNivel);
 					Mov = 6;
-					MAXAST = 7;
+					MAXAST = 6;
 					for (int i = 0; i < ast.size(); i++) {
 
 						RectanguloGrafico rect = (RectanguloGrafico) ast.get(i);
-						rect.pintar(Color.BLUE);
+						rect.pintar(Color.YELLOW);
 
 					}
 				}
-
+				
+				//Volver a jugar 
+				class VolverJugar extends Thread
+				{
+				   public void run()
+				   {
+					   Juego j= new Juego(user, invent);
+				   } 
+				}
+				
+				
 				if (Vidas <= 0) {
 					FinDeJuego = false;
+					user.setDinero(user.getDinero()+(Score/5));
+					
+					Rank r = new Rank(user.getNick(),nMuertos,Score);
+					
+					VentanaRanking.añadirRank(r);
+					
+					
 					// Icon icono = new
 					// ImageIcon(getClass().getResource("C:\\Users\\Dani\\Desktop\\Recursos\\Esqueleto"));
 					String[] options = { "Volver al Menu", "Ver puntuacion", "Volver a jugar", "Cerrar Juego" };
 					int seleccion = JOptionPane.showOptionDialog(PanelEmergente,
 							"Es necesario que seleccione una opcion", "Titulo", JOptionPane.DEFAULT_OPTION,
 							JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
+					//Volver menu
 					if (seleccion == 0) {
 
-						new VentanaMenu();
+						VentanaMenu vm = new VentanaMenu(user, invent);
 						Window w = SwingUtilities.getWindowAncestor(PanelFG.this);
-						w.setVisible(false);
-
+						w.dispose();
+					//Puntuación
 					} else if (seleccion == 1) {
 
-						JOptionPane.showMessageDialog(null, "Tu puntuacion ha sido de "+Score);
-						//Ranking
+						JOptionPane.showMessageDialog(null,"Nick : "+user.getNick()+ "\nTu puntuacion ha sido de " + Score+"\nHas conseguido "+(Score/5)  +" monedas!!"+
+								"\nHas matado "+nMuertos+" enemigos");
 						
-					} else if (seleccion == 2) {
 						
+						
+						VentanaMenu vm = new VentanaMenu(user, invent);
 						Window w = SwingUtilities.getWindowAncestor(PanelFG.this);
-						w.setVisible(false);
-						jugar();
+						w.dispose();
 						
+						
+					} //Rejugar
+					else if (seleccion == 2) {
+						
+						VolverJugar juego = new VolverJugar();
+						juego.start();
+						Window w = SwingUtilities.getWindowAncestor(PanelFG.this);
+						w.dispose();
+					
+						//Salir
 					} else if (seleccion == 3) {
 
 						System.exit(0);

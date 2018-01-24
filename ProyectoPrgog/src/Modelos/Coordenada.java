@@ -1,9 +1,16 @@
+/**
+ * Clase padre de las clases Circulo,Nave,Rectangulo.Para que estas clases hereden 
+ * los atributos Coordenada X y Coordenada Y.
+ * @author Jonathan Blazquez y Daniel Diaz
+ * @version 1.0
+ */
+
 package Modelos;
 
 public class Coordenada {
 
-	private float x;
-	private float y;
+	private float x;// Coordenanda X
+	private float y;// Coordenada Y
 
 	public Coordenada() {
 		this.x = 0;
@@ -16,12 +23,14 @@ public class Coordenada {
 		this.y = y;
 
 	}
-	
-	public Coordenada(Coordenada nva){
-		this.x=nva.x;
-		this.y=nva.y;
-		
+
+	public Coordenada(Coordenada nva) {
+		this.x = nva.x;
+		this.y = nva.y;
+
 	}
+
+	// Getters y Setters.
 
 	public float getX() {
 		return x;
@@ -38,20 +47,20 @@ public class Coordenada {
 	public void setY(float y) {
 		this.y = y;
 	}
-	
-	public Coordenada Suma(Coordenada S)
-	{
-		float Sumx =this.x+S.getX();
-		float Sumy =this.y+S.getY();
-		
-		Coordenada Cor=new Coordenada(Sumx,Sumy);
-		
-		
+
+	/**
+	 * Metodo para sumar coordenadas
+	 * 
+	 * @param Coordenada
+	 *            S
+	 * @return Cordenada nueva
+	 */
+	public Coordenada Suma(Coordenada S) {
+		float Sumx = this.x + S.getX();
+		float Sumy = this.y + S.getY();
+		Coordenada Cor = new Coordenada(Sumx, Sumy);
 		return Cor;
-		
+
 	}
-	
-	
-	
 
 }

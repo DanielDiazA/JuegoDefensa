@@ -1,3 +1,8 @@
+/**
+ * Ventana del menu principal donde elegis que hacer entre las diferentes opciones.
+ * @author Jonathan Blazquez y Daniel Diaz
+ * @version 1.0
+ */
 package Registro;
 
 import javax.swing.*;
@@ -22,6 +27,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.SystemColor;
+import javax.swing.border.EmptyBorder;
 
 public class VentanaMenu extends JFrame {
 	private JButton btnTienda;
@@ -35,12 +42,14 @@ public class VentanaMenu extends JFrame {
 	private JLabel lblNewLabel_1;
 	private JLabel label;
 	private JLabel label_1;
+	private static Usuario user;
+	private static Inventario invent;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaMenu window = new VentanaMenu();
+					VentanaMenu window = new VentanaMenu(user, invent);
 					window.menu.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,20 +58,22 @@ public class VentanaMenu extends JFrame {
 		});
 	}
 
-	public VentanaMenu() {
+	public VentanaMenu(Usuario u, Inventario i) {
+		this.user = u;
+		this.invent = i;
 		Initialize();
 	}
 
 	public void Initialize() {
-
+		//musica fondo
 		AudioClip musicafondo;
 		musicafondo = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/menu.wav"));
 		musicafondo.play();
-		
+		//sonido siguiente ventana
 		AudioClip pasarventana;
 		pasarventana = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/pasarventana.wav"));
 		
-
+		//sonido volver a la ventana anterior
 		AudioClip atras;
 		atras = java.applet.Applet.newAudioClip(getClass().getResource("/Recursos/atras.wav"));
 
@@ -74,8 +85,10 @@ public class VentanaMenu extends JFrame {
 		menu.setBounds(400, 200, 1000, 600);
 
 		btnJugar = new JButton("Jugar");
-		btnJugar.setFont(new Font("Bauhaus 93", Font.PLAIN, 60));
-		btnJugar.setBounds(277, 85, 400, 117);
+		btnJugar.setBackground(UIManager.getColor("Button.shadow"));
+		btnJugar.setForeground(new Color(255, 153, 153));
+		btnJugar.setFont(new Font("Sitka Heading", Font.BOLD | Font.ITALIC, 60));
+		btnJugar.setBounds(311, 29, 400, 117);
 
 		btnJugar.setOpaque(false);
 		btnJugar.setContentAreaFilled(false);
@@ -84,11 +97,12 @@ public class VentanaMenu extends JFrame {
 		menu.getContentPane().add(btnJugar);
 
 		btnTienda = new JButton("Tienda");
-		btnTienda.setFont(new Font("Bauhaus 93", Font.PLAIN, 60));
-		btnTienda.setBounds(287, 226, 400, 117);
-		btnTienda.setOpaque(false);
+		btnTienda.setBackground(new Color(0, 0, 0));
+		btnTienda.setForeground(new Color(255, 153, 153));
+		btnTienda.setFont(new Font("Sitka Heading", Font.BOLD | Font.ITALIC, 60));
+		btnTienda.setBounds(298, 159, 376, 116);
 		btnTienda.setContentAreaFilled(false);
-		btnTienda.setBorder(null);
+		btnTienda.setBorder(new EmptyBorder(0, 0, 0, 0));
 
 		menu.getContentPane().add(btnTienda);
 
@@ -102,36 +116,54 @@ public class VentanaMenu extends JFrame {
 		menu.getContentPane().add(btnSalir);
 
 		btnRanking = new JButton("Ranking");
+		btnRanking.setForeground(new Color(255, 153, 153));
 		btnRanking.addActionListener(new ActionListener() {
+			//dirigirte ventana ranking
 			public void actionPerformed(ActionEvent e) {
 				musicafondo.stop();
 				pasarventana.play();
-				VentanaRanking ranking = new VentanaRanking();
-				menu.setVisible(false);
+				
+				VentanaRanking ranking = new VentanaRanking(user, invent);
+				menu.setVisible(false);;
 			}
 		});
 		btnRanking.setBackground(new Color(240, 240, 240));
 		btnRanking.setOpaque(false);
-		btnRanking.setFont(new Font("Bauhaus 93", Font.PLAIN, 60));
+		btnRanking.setFont(new Font("Sitka Heading", Font.BOLD | Font.ITALIC, 60));
 		btnRanking.setContentAreaFilled(false);
 		btnRanking.setBorder(null);
-		btnRanking.setBounds(277, 377, 400, 117);
+		btnRanking.setBounds(298, 282, 400, 117);
 		menu.getContentPane().add(btnRanking);
 
 		btnTienda.addActionListener(new ActionListener() {
+			//Dirigirte ventana tienda
 			public void actionPerformed(ActionEvent arg0) {
 				musicafondo.stop();
 				pasarventana.play();
-				VentanaTienda tienda = new VentanaTienda();
+				VentanaTienda tienda = new VentanaTienda(user, invent);
 				menu.setVisible(false);
 			}
 
 		});
 
+		class MiHilo extends Thread
+		{
+		   public void run()
+		   {
+			   Juego j= new Juego(user, invent);
+		   } 
+		};
+		
+		
+		
 		btnJugar.addActionListener(new ActionListener() {
+			//dirigirte al juego
 			public void actionPerformed(ActionEvent e) {
 
-				// Necesito help pa vincularlo con juego
+				
+				MiHilo elHilo = new MiHilo();
+				elHilo.start();
+				
 				pasarventana.play();
 				menu.setVisible(false);
 				musicafondo.stop();
@@ -141,7 +173,7 @@ public class VentanaMenu extends JFrame {
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-				VentanaPrincipal vp = new VentanaPrincipal();
+				VentanaPrincipal vp = new VentanaPrincipal(new Usuario(), new Inventario());
 				menu.setVisible(false);
 				musicafondo.stop();
 				atras.play();
@@ -150,7 +182,7 @@ public class VentanaMenu extends JFrame {
 			}
 		});
 
-		// musica on
+		// musica ON
 		
 		JButton lblNewLabel_1 = new JButton("");
 		JButton lblNewLabel_2 = new JButton("");
@@ -179,7 +211,7 @@ public class VentanaMenu extends JFrame {
 		this.repaint();
 		menu.getContentPane().add(lblNewLabel_1);
 
-		// musica off
+		// musica OFF
 		lblNewLabel_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -211,17 +243,38 @@ public class VentanaMenu extends JFrame {
 		
 		
 		JLabel lbl1 = new JLabel("");
-		lbl1.setBounds(287, 227, 398, 116);
-		ImageIcon fot2 = new ImageIcon(getClass().getResource("/Recursos/Nube.png"));
+		lbl1.setBounds(298, 159, 376, 117);
+		ImageIcon fot2 = new ImageIcon(getClass().getResource("/Recursos/sword1.png"));
 		Icon icono2 = new ImageIcon(
 				fot2.getImage().getScaledInstance(lbl1.getWidth(), lbl1.getHeight(), Image.SCALE_DEFAULT));
 		lbl1.setIcon(icono2);
 		this.repaint();
+		
+		JButton button_1 = new JButton("Personaje");
+		button_1.setForeground(new Color(255, 153, 153));
+		button_1.addActionListener(new ActionListener() {
+			//Dirigirte ventana character
+			public void actionPerformed(ActionEvent e) {
+				
+				VentanaCharacter vc=new VentanaCharacter(user, invent);
+				menu.setVisible(false);;
+				musicafondo.stop();
+				
+				
+			}
+		});
+		button_1.setOpaque(false);
+		button_1.setFont(new Font("Sitka Heading", Font.BOLD | Font.ITALIC, 60));
+		button_1.setContentAreaFilled(false);
+		button_1.setBorder(null);
+		button_1.setBackground(SystemColor.menu);
+		button_1.setBounds(311, 412, 400, 117);
+		menu.getContentPane().add(button_1);
 		menu.getContentPane().add(lbl1);
 
 		JLabel lbl2 = new JLabel("");
-		lbl2.setBounds(277, 378, 398, 116);
-		ImageIcon fot3 = new ImageIcon(getClass().getResource("/Recursos/Nube.png"));
+		lbl2.setBounds(298, 288, 376, 116);
+		ImageIcon fot3 = new ImageIcon(getClass().getResource("/Recursos/sword1.png"));
 		Icon icono3 = new ImageIcon(
 				fot3.getImage().getScaledInstance(lbl2.getWidth(), lbl2.getHeight(), Image.SCALE_DEFAULT));
 		lbl2.setIcon(icono3);
@@ -229,18 +282,32 @@ public class VentanaMenu extends JFrame {
 		menu.getContentPane().add(lbl2);
 
 		JLabel lbl3 = new JLabel("");
-		lbl3.setBounds(279, 80, 398, 116);
-		ImageIcon fot4 = new ImageIcon(getClass().getResource("/Recursos/Nube.png"));
+		lbl3.setBounds(298, 29, 389, 116);
+		ImageIcon fot4 = new ImageIcon(getClass().getResource("/Recursos/sword1.png"));
 		Icon icono4 = new ImageIcon(fot4.getImage().getScaledInstance(lbl3.getWidth(), lbl3.getHeight(), Image.SCALE_DEFAULT));
 		lbl3.setIcon(icono4);
 		this.repaint();
 		menu.getContentPane().add(lbl3);
+		
+		JLabel label_2 = new JLabel("");
+		label_2.setBounds(287, 413, 398, 116);
+		ImageIcon fot7 = new ImageIcon(getClass().getResource("/Recursos/sword1.png"));
+		Icon icono7 = new ImageIcon(
+				fot7.getImage().getScaledInstance(label_2.getWidth(), label_2.getHeight(), Image.SCALE_DEFAULT));
+		label_2.setIcon(icono7);
+		this.repaint();
+		
+		
+		menu.getContentPane().add(label_2);
 
-		JLabel background = new JLabel("");
+		
+		//fondo
+		 JLabel background = new JLabel("");
 		background.setIcon(new ImageIcon(getClass().getResource("/Recursos/fondom.jpg")));
 		background.setBounds(0, 0, 994, 565);
-		menu.getContentPane().add(background);
+		menu.getContentPane().add(background); 
+		 
+		
 
 	}
-
 }
